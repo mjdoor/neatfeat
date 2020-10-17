@@ -12,6 +12,16 @@ const filterNumbers = arr => {
   return { filteredArr, removedIndices };
 };
 
+export const count = arr => {
+  const { filteredArr } = filterNumbers(arr);
+  return filteredArr.length;
+};
+
+export const countMissing = arr => {
+  const { filteredArr } = filterNumbers(arr);
+  return arr.length - filteredArr.length;
+};
+
 export const mean = arr => {
   const { filteredArr } = filterNumbers(arr);
   return filteredArr.reduce((sum, el) => sum + el, 0) / filteredArr.length;

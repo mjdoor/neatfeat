@@ -1,4 +1,12 @@
-import { mean, std, min, max, pearsonCorr } from "./StatsFunctions";
+import {
+  count,
+  countMissing,
+  mean,
+  std,
+  min,
+  max,
+  pearsonCorr
+} from "./StatsFunctions";
 
 /*
     With rawData of the form:
@@ -47,6 +55,8 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
   const targetColumn = columns[targetColumnName];
 
   const statsPropertyCalculations = [
+    { name: "Count", func: count },
+    { name: "# Missing", func: countMissing },
     { name: "Mean", func: mean },
     { name: "Min", func: min },
     { name: "Max", func: max },
