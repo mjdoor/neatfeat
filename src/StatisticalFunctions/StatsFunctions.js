@@ -14,7 +14,20 @@ const filterNumbers = arr => {
 
 export const mean = arr => {
   const { filteredArr } = filterNumbers(arr);
-  return filteredArr.reduce((sum, el) => (sum += el), 0) / filteredArr.length;
+  return filteredArr.reduce((sum, el) => sum + el, 0) / filteredArr.length;
+};
+
+export const std = arr => {
+  const { filteredArr } = filterNumbers(arr);
+  if (filteredArr.length <= 1) {
+    return 0;
+  }
+
+  const xMean = mean(arr);
+  return Math.sqrt(
+    filteredArr.reduce((sum, el) => sum + Math.pow(el - xMean, 2), 0) /
+      (filteredArr.length - 1) // using sample std calculation (dividing by N-1 instead of N)
+  );
 };
 
 export const min = arr => {
@@ -33,9 +46,6 @@ export const pearsonCorr = (dataArr, targetArr) => {
   for (let i = removedIndices.length - 1; i >= 0; i--) {
     targetArr.splice(removedIndices[i], 1);
   }
-
-  console.log(filteredArr);
-  console.log(targetArr);
 
   if (filteredArr.length !== targetArr.length) {
     console.log(

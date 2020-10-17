@@ -1,4 +1,4 @@
-import { mean, min, max, pearsonCorr } from "./StatsFunctions";
+import { mean, std, min, max, pearsonCorr } from "./StatsFunctions";
 
 /*
     With rawData of the form:
@@ -50,6 +50,7 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     { name: "Mean", func: mean },
     { name: "Min", func: min },
     { name: "Max", func: max },
+    { name: "Standard Deviation", func: std },
     {
       name: "Pearson Correlation Coefficient",
       func: pearsonCorr,
