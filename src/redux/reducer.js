@@ -37,6 +37,23 @@ const firstFloorSqFts = [
   1253,
 ];
 const garageCapacities = [2, 2, 2, 3, 3, 2, 2, 2, 2, 1, 1, 3, 1, 3, 1];
+const exteriorType = [
+  "VinylSd",
+  "MetalSd",
+  "VinylSd",
+  "Wd Sdng",
+  "VinylSd",
+  "VinylSd",
+  "VinylSd",
+  "HdBoard",
+  "BrkFace",
+  "MetalSd",
+  "HdBoard",
+  "WdShing",
+  "HdBoard",
+  "VinylSd",
+  "MetalSd"
+];
 const prices = [
   208500,
   181500,
@@ -62,7 +79,8 @@ const tempTestData = (() => {
       LotArea: lotAreas[i],
       FirstFlrSqFt: firstFloorSqFts[i],
       GarageCapacity: garageCapacities[i],
-      SalePrice: prices[i],
+      ExteriorType: exteriorType[i],
+      SalePrice: prices[i]
     });
   }
 
