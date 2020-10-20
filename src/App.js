@@ -7,7 +7,7 @@ import theme from "./themes/theme";
 
 import AppToolBar from "./components/AppToolBar";
 import UploadCSV from "./components/UploadCSV";
-import StatisticsTable from "./components/Statistics/StatisticsTable";
+import StatsData from "./components/Statistics/StatsData";
 
 import { store } from "./redux/store";
 
@@ -16,7 +16,7 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <AppToolBar />
-        <StatisticsTable />
+        <StatsData />
       </ThemeProvider>
     </Provider>
   );
