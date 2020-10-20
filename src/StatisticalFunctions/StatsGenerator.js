@@ -1,59 +1,7 @@
 import {
-  filterNumbers,
-  mean,
-  std,
-  min,
-  max,
-  pearsonCorr,
-  percentile,
-  countOutliers
-} from "./StatsFormulas";
-
-class NumericStatsCalculator {
-  constructor(valueArr, targetArr) {
-    const { filteredArr, removedIndices } = filterNumbers(valueArr);
-    this.valueArr = filteredArr;
-    this.targetArr = [...targetArr]; // build a copy of the targetArr to ensure any changes made to targetArr here don't affect it outside this scope
-    // remove elements from targetArr that correspond to the removedIndices of the dataArr (assume targetArr doesn't have any missing values)
-    this.numMissing = removedIndices.length;
-    for (let i = this.numMissing - 1; i >= 0; i--) {
-      this.targetArr.splice(removedIndices[i], 1);
-    }
-  }
-
-  buildStatsReport() {
-    if (this.valueArr.length !== this.targetArr.length) {
-      console.log("Data and target arrays have different lengths");
-      return undefined;
-    }
-
-    const report = {
-      Count: this.valueArr.length,
-      "# Missing": this.numMissing
-    };
-
-    report["Mean"] = mean(this.valueArr);
-    report["Standard Deviation"] = std(this.valueArr, report["Mean"]);
-    report["Min"] = min(this.valueArr);
-    report["Max"] = max(this.valueArr);
-    report["1st Quartile"] = percentile(this.valueArr, 25);
-    report["Median"] = percentile(this.valueArr, 50);
-    report["3rd Quartile"] = percentile(this.valueArr, 75);
-    report["# Outliers"] = countOutliers(
-      this.valueArr,
-      report["1st Quartile"],
-      report["3rd Quartile"]
-    );
-    report["Pearson Correlation Coefficient"] = pearsonCorr(
-      this.valueArr,
-      this.targetArr,
-      report["Mean"],
-      mean(this.targetArr)
-    );
-
-    return report;
-  }
-}
+  NumericStatsCalculator,
+  CategoricalStatsCalculator
+} from "./StatsCalculators";
 
 /*
     With rawData of the form:
@@ -72,44 +20,72 @@ class NumericStatsCalculator {
     ]
 
     Want statsData of the form: 
-    [
-      {
-        name: Feature1,
-        data: {
-          min: minval,
-          max: maxval,
-          mean: meanval,
-          ...
-        }
-      },
-      ...
-    ]
+    {
+     numerical: [
+        {
+          name: Feature1,
+          data: {
+            min: minval,
+            max: maxval,
+            mean: meanval,
+            ...
+          }
+        },
+        ...
+      ],
+      categorical: [
+        ...
+      ]
+    }
   */
 const generateStatsFromRawData = (rawData, targetColumnName) => {
   const featureNames = Object.keys(rawData[0]);
   const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
-    acc[featureName] = [];
+    acc[featureName] = { data: [], type: "unknown" };
     return acc;
   }, {}); // builds object { Feature1: [], Feature2: [],...}
   const columns = rawData.reduce((acc, row) => {
     Object.entries(row).forEach(([featureName, value]) => {
-      acc[featureName].push(value);
+      acc[featureName].data.push(value);
+      // if value is a string, mark this feature as categorical (will override numeric type if some data in column are numeric, some are string)
+      if (isNaN(value) && value !== null && value !== undefined) {
+        acc[featureName].type = "categorical";
+      } else if (!isNaN(value) && acc[featureName].type !== "categorical") {
+        acc[featureName].type = "numeric";
+      }
     });
     return acc;
-  }, initialColumnBuilder);
+  }, initialColumnBuilder); // populates column arrays { Feature1: [1,2,3...], Feature2...}
 
   // grab the target column data for later use
-  const targetColumn = columns[targetColumnName];
+  const targetColumn = columns[targetColumnName].data;
 
-  // still need to build Stats data using calculations...
-  const tempStatsData = Object.entries(columns).map(
+  // separate the numeric and categorical columns
+  const numeric_columns = {};
+  const categorical_columns = {};
+  Object.entries(columns).forEach(([featureName, column]) => {
+    if (column.type === "numeric") {
+      numeric_columns[featureName] = column.data;
+    } else {
+      categorical_columns[featureName] = column.data;
+    }
+  });
+
+  const numericStatsData = Object.entries(numeric_columns).map(
     ([featureName, values]) => ({
       name: featureName,
       data: new NumericStatsCalculator(values, targetColumn).buildStatsReport()
     })
   );
 
-  return tempStatsData;
+  const categoricalStatsData = Object.entries(categorical_columns).map(
+    ([featureName, values]) => ({
+      name: featureName,
+      data: new CategoricalStatsCalculator(values).buildStatsReport()
+    })
+  );
+
+  return { numerical: numericStatsData, categorical: categoricalStatsData };
 };
 
 export default generateStatsFromRawData;

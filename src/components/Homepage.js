@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Paper } from "@material-ui/core";
+import StatsData from "./Statistics/StatsData";
 
 const Homepage = () => {
   return (
@@ -10,7 +11,7 @@ const Homepage = () => {
           width: "min-content",
           margin: "0 auto",
           padding: 20,
-          marginTop: 30,
+          marginTop: 30
         }}
         align="center"
       >
@@ -18,6 +19,7 @@ const Homepage = () => {
           Neat Feat
         </Typography>
       </Paper>
+      <StatsData />
     </div>
   );
 };
