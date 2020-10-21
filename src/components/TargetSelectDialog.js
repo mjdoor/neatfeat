@@ -7,22 +7,27 @@ import {
   FormControl,
   InputLabel,
   DialogContent,
+  Button,
 } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import ACTIONS from "../redux/actions";
 
 const TargetSelectDialog = (props) => {
+  var target = props.columns[props.columns.length - 1];
   const { onClose, selectedValue, open } = props;
   const dispatch = useDispatch();
-  const { rawData } = useSelector((state) => state);
 
   const handleChange = (event) => {
-    dispatch(ACTIONS.changeTarget(event.target.value));
+    target = event.target.value;
+  };
+
+  const handleClick = () => {
+    dispatch(ACTIONS.changeTarget(target));
 
     // Store the data to the redux store
     dispatch(ACTIONS.createTable(props.data));
 
-    onClose(event.target.value);
+    onClose(target);
   };
 
   const handleClose = () => {
@@ -30,12 +35,17 @@ const TargetSelectDialog = (props) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      disableBackdropClick
+      disableEscapeKeyDown
+    >
       <DialogTitle>Choose the Target Column</DialogTitle>
       <DialogContent align="center">
         <FormControl style={{ minWidth: "8em", marginBottom: "2em" }}>
           <InputLabel>Target Column</InputLabel>
-          <Select onChange={handleChange}>
+          <Select defaultValue={target} onChange={handleChange}>
             <MenuItem key="Placeholder" disabled>
               TargetColumn
             </MenuItem>
@@ -47,6 +57,9 @@ const TargetSelectDialog = (props) => {
           </Select>
         </FormControl>
       </DialogContent>
+      <Button onClick={handleClick} variant="contained" color="primary">
+        Ok
+      </Button>
     </Dialog>
   );
 };
