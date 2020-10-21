@@ -1,5 +1,8 @@
+//npm install react-data-grid@7.0.0-canary.15
+
 import React from "react";
 import { Typography, Paper } from "@material-ui/core";
+import DataGridTable from "./DataGridTable";
 
 const Homepage = () => {
   return (
@@ -18,6 +21,7 @@ const Homepage = () => {
           Neat Feat
         </Typography>
       </Paper>
+      <DataGridTable />
     </div>
   );
 };
