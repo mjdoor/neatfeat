@@ -4,9 +4,9 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import UploadCSV from "./UploadCSV";
 
-const Homepage = () => {
+const AppToolBar = () => {
   return (
-    <div style={{ padding: 10 }} align="center">
+    <div style={{ padding: 10 }}>
       <AppBar>
         <Toolbar>
           <Typography color="secondary" align="left" noWrap variant="h4">
@@ -19,4 +19,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default AppToolBar;

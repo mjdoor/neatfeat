@@ -5,7 +5,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { Provider } from "react-redux";
 import theme from "./themes/theme";
 
-import Homepage from "./components/Homepage";
+import AppToolBar from "./components/AppToolBar";
+import UploadCSV from "./components/UploadCSV";
 import StatisticsTable from "./components/Statistics/StatisticsTable";
 
 import { store } from "./redux/store";
@@ -14,7 +15,7 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Homepage />
+        <AppToolBar />
         <StatisticsTable />
       </ThemeProvider>
     </Provider>
