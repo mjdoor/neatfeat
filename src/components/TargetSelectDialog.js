@@ -7,25 +7,23 @@ import {
   FormControl,
   InputLabel,
   DialogContent,
-  Button,
+  Button
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import ACTIONS from "../redux/actions";
 
-const TargetSelectDialog = (props) => {
+const TargetSelectDialog = props => {
   var target = props.columns[props.columns.length - 1];
   const { onClose, selectedValue, open } = props;
   const dispatch = useDispatch();
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     target = event.target.value;
   };
 
   const handleClick = () => {
-    dispatch(ACTIONS.changeTarget(target));
-
     // Store the data to the redux store
-    dispatch(ACTIONS.createTable(props.data));
+    dispatch(ACTIONS.createTable(props.data, target));
 
     onClose(target);
   };
@@ -49,7 +47,7 @@ const TargetSelectDialog = (props) => {
             <MenuItem key="Placeholder" disabled>
               TargetColumn
             </MenuItem>
-            {props.columns.map((data) => (
+            {props.columns.map(data => (
               <MenuItem value={data} key={data}>
                 {data}
               </MenuItem>
