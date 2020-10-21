@@ -17,7 +17,7 @@ const lotAreas = [
   11924,
   12968,
   10652,
-  10920
+  10920,
 ];
 const firstFloorSqFts = [
   856,
@@ -34,7 +34,7 @@ const firstFloorSqFts = [
   1182,
   912,
   1494,
-  1253
+  1253,
 ];
 const garageCapacities = [2, 2, 2, 3, 3, 2, 2, 2, 2, 1, 1, 3, 1, 3, 1];
 const exteriorType = [
@@ -69,7 +69,7 @@ const prices = [
   345000,
   144000,
   279500,
-  157000
+  157000,
 ];
 
 const tempTestData = (() => {
@@ -89,7 +89,7 @@ const tempTestData = (() => {
 
 const intitialState = {
   rawData: tempTestData,
-  targetColumnName: "SalePrice"
+  targetColumnName: "Test",
 };
 
 export default (state = intitialState, action) => {
@@ -100,13 +100,21 @@ export default (state = intitialState, action) => {
         statsData: generateStatsFromRawData(
           state.rawData,
           state.targetColumnName
-        )
+        ),
       };
-    case ACTIONS.Types.CREATING_TABLE:
+    case ACTIONS.Types.CREATE_TABLE:
       return {
         ...state,
         rawData: action.data,
-        statsData: generateStatsFromRawData(action.data, state.targetColumnName)
+        statsData: generateStatsFromRawData(
+          action.data,
+          state.targetColumnName
+        ),
+      };
+    case ACTIONS.Types.CHANGE_TARGET:
+      return {
+        ...state,
+        targetColumnName: action.target,
       };
     default:
       return state;
