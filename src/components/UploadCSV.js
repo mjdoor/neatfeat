@@ -13,9 +13,9 @@ const UploadCSV = () => {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
 
-  const handleOnDrop = (data) => {
+  const handleOnDrop = data => {
     // Isolate the data
-    var arrData = data.map((d) => d.data);
+    var arrData = data.map(d => d.data);
 
     // Set the columns for the Target Column Select
     setColumns(arrData[0]);
@@ -25,7 +25,7 @@ const UploadCSV = () => {
     setData(convertToArrayOfObjects(arrData));
   };
 
-  const handleClose = (value) => {
+  const handleClose = value => {
     setOpen(false);
     setSelectedValue(value);
   };
@@ -62,14 +62,15 @@ const UploadCSV = () => {
         onDrop={handleOnDrop}
         onError={handleOnError}
         noDrag
+        config={{ skipEmptyLines: true }}
         style={{
           dropArea: {
             width: "10px",
             height: "10px",
             borderColor: "#fff",
-            marginTop: "3em",
+            marginTop: "3em"
           },
-          height: "1em",
+          height: "1em"
         }}
       >
         <Button

@@ -1,5 +1,13 @@
 export const filterOutNull = arr => {
-  return arr.filter(el => el !== null && el !== undefined);
+  const removedIndices = [];
+  const filteredArr = arr.filter((el, idx) => {
+    const keep = el !== null && el !== undefined;
+    if (!keep) {
+      removedIndices.push(idx);
+    }
+    return keep;
+  });
+  return { filteredArr, removedIndices };
 };
 
 export const valueCounts = arr => {
