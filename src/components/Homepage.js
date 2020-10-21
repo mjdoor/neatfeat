@@ -2,11 +2,7 @@
 
 import React from "react";
 import { Typography, Paper } from "@material-ui/core";
-<<<<<<< HEAD
 import DataGridTable from "./DataGridTable";
-=======
-import StatsData from "./Statistics/StatsData";
->>>>>>> 3fadf65159de37844137e8b4f2eb9b6b93473abb
 
 const Homepage = () => {
   return (
@@ -17,7 +13,7 @@ const Homepage = () => {
           width: "min-content",
           margin: "0 auto",
           padding: 20,
-          marginTop: 30
+          marginTop: 30,
         }}
         align="center"
       >
@@ -25,11 +21,7 @@ const Homepage = () => {
           Neat Feat
         </Typography>
       </Paper>
-<<<<<<< HEAD
       <DataGridTable />
-=======
-      <StatsData />
->>>>>>> 3fadf65159de37844137e8b4f2eb9b6b93473abb
     </div>
   );
 };
