@@ -12,8 +12,14 @@
     "react-csv-to-table": "0.0.4",
     "react-data-grid": "^7.0.0-canary.15",
     "react-dom": "^16.13.1",
+<<<<<<< HEAD
     "react-papaparse": "^3.9.0",
     "react-scripts": "3.4.3"
+=======
+    "react-redux": "^7.2.1",
+    "react-scripts": "3.4.3",
+    "redux": "^4.0.5"
+>>>>>>> f2bede2f1374bc3dcb1a754372af6a9fe877a455
   },
   "scripts": {
     "start": "react-scripts start",
