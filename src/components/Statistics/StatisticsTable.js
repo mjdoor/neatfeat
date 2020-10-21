@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
+import ValueCountsTooltip from "./ValueCountsTooltip";
 
 import { roundNum } from "../../Utilities/NumberUtilities";
 
@@ -49,7 +49,11 @@ const StatisticsTable = props => {
         width: 150,
         renderCell: params => {
           const [firstCatName, firstCatCount] = Object.entries(params.value)[0];
-          return <span>{`${firstCatName}: ${firstCatCount} ...`}</span>;
+          return (
+            <ValueCountsTooltip valueCounts={Object.entries(params.value)}>
+              <span>{`${firstCatName}: ${firstCatCount} ...`}</span>
+            </ValueCountsTooltip>
+          );
         }
       });
     }
@@ -65,7 +69,11 @@ const StatisticsTable = props => {
           columns={columns}
           checkboxSelection
           disableSelectionOnClick
-          onCellHover={cellParams => console.log(cellParams)}
+          onSelectionChange={selectionParams =>
+            props.onSelectionChange(
+              selectionParams.rows.map(rw => rw.featureName)
+            )
+          }
         />
       )}
     </div>

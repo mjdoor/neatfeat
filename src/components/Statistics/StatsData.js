@@ -8,7 +8,12 @@ import StatisticsTable from "./StatisticsTable";
 const StatsData = props => {
   const dispatch = useDispatch();
   const [showNumeric, setShowNumeric] = useState(true);
+  const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
   const { statsData } = useSelector(state => state);
+
+  const handleSelectionChange = selectedFeatureNames => {
+    setSelectedFeatures(selectedFeatureNames);
+  };
 
   return (
     <div>
@@ -44,7 +49,11 @@ const StatsData = props => {
       </Button>
       <br />
       {statsData !== undefined && (
-        <StatisticsTable numerical={showNumeric} statsData={statsData} />
+        <StatisticsTable
+          numerical={showNumeric}
+          statsData={statsData}
+          onSelectionChange={handleSelectionChange}
+        />
       )}
     </div>
   );
