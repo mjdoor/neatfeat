@@ -57,7 +57,7 @@ const UploadCSV = () => {
   };
 
   return (
-    <div style={{ marginBottom: "1em", padding: "1em" }}>
+    <div style={{ marginBottom: "1em", padding: "1em" }} align="center">
       <CSVReader
         onDrop={handleOnDrop}
         onError={handleOnError}
@@ -68,7 +68,6 @@ const UploadCSV = () => {
             height: "10px",
             borderColor: "#fff",
             marginTop: "3em",
-            display: "inline-block",
           },
           height: "1em",
         }}
