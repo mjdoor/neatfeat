@@ -1,17 +1,3 @@
-export const filterNumbers = arr => {
-  const removedIndices = [];
-  const filteredArr = arr
-    .map(el => Number(el))
-    .filter((el, idx) => {
-      const isNum = !Number.isNaN(el);
-      if (!isNum) {
-        removedIndices.push(idx);
-      }
-      return isNum;
-    });
-  return { filteredArr, removedIndices };
-};
-
 export const mean = arr => {
   return arr.reduce((sum, el) => sum + el, 0) / arr.length;
 };

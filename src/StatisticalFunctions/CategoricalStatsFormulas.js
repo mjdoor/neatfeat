@@ -11,8 +11,13 @@ export const filterOutNull = arr => {
 };
 
 export const valueCounts = arr => {
-  return arr.reduce((counts, val) => {
+  const valueCounts = arr.reduce((counts, val) => {
     counts[val] = counts[val] === undefined ? 1 : ++counts[val];
     return counts;
   }, {});
+
+  // sorts the valueCounts object keys by value, descending
+  return Object.fromEntries(
+    Object.entries(valueCounts).sort((lhs, rhs) => rhs[1] - lhs[1])
+  );
 };
