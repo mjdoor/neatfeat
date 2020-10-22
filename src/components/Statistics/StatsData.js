@@ -17,7 +17,7 @@ const StatsData = props => {
     <div>
       {statsData !== undefined && (
         <Fragment>
-          <Grid component="label" container alignItems="center" spacing={1}>
+          <Grid component="div" container alignItems="center">
             <Grid item>
               <Typography
                 component="p"
@@ -33,12 +33,14 @@ const StatsData = props => {
                 name="datatypeSwitch"
               />
             </Grid>
-            <Typography
-              component="p"
-              style={{ fontWeight: showNumeric ? "bold" : "normal" }}
-            >
-              Numerical
-            </Typography>
+            <Grid item>
+              <Typography
+                component="p"
+                style={{ fontWeight: showNumeric ? "bold" : "normal" }}
+              >
+                Numerical
+              </Typography>
+            </Grid>
           </Grid>
           <StatisticsTable
             numerical={showNumeric}
