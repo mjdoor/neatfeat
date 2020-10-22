@@ -3,6 +3,7 @@ import { Typography } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import UploadCSV from "./UploadCSV";
+import DataGridTable from "./DataGridTable";
 
 const AppToolBar = () => {
   return (
@@ -15,6 +16,7 @@ const AppToolBar = () => {
         </Toolbar>
       </AppBar>
       <UploadCSV />
+      <DataGridTable />
     </div>
   );
 };

@@ -52,7 +52,7 @@ const exteriorType = [
   "WdShing",
   "HdBoard",
   "VinylSd",
-  "MetalSd"
+  "MetalSd",
 ];
 const prices = [
   208500,
@@ -80,7 +80,7 @@ const tempTestData = (() => {
       FirstFlrSqFt: firstFloorSqFts[i],
       GarageCapacity: garageCapacities[i],
       ExteriorType: exteriorType[i],
-      SalePrice: prices[i]
+      SalePrice: prices[i],
     });
   }
 
@@ -90,6 +90,7 @@ const tempTestData = (() => {
 const intitialState = {
   rawData: tempTestData,
   targetColumnName: "Test",
+  rawColumn: null,
 };
 
 export default (state = intitialState, action) => {
@@ -115,6 +116,11 @@ export default (state = intitialState, action) => {
       return {
         ...state,
         targetColumnName: action.target,
+      };
+    case ACTIONS.Types.UPDATE_COLUMN:
+      return {
+        ...state,
+        rawColumn: action.column,
       };
     default:
       return state;
