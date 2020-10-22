@@ -14,15 +14,23 @@ const UploadCSV = () => {
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleOnDrop = (data) => {
-    // Isolate the data
-    var arrData = data.map((d) => d.data);
+    // Check if file is empty
+    if (data[0].data[0] === undefined || data[0].data[0] === "") {
+      // array empty or does not exist
+      console.log("EMPTY");
+    } else {
+      // array isn't empty
 
-    // Set the columns for the Target Column Select
-    setColumns(arrData[0]);
-    setOpen(true);
+      // Isolate the data
+      var arrData = data.map((d) => d.data);
 
-    // Make the data into an Array of Objects with Features as the keys
-    setData(convertToArrayOfObjects(arrData));
+      // Set the columns for the Target Column Select
+      setColumns(arrData[0]);
+      setOpen(true);
+
+      // Make the data into an Array of Objects with Features as the keys
+      setData(convertToArrayOfObjects(arrData));
+    }
   };
 
   const handleClose = (value) => {
