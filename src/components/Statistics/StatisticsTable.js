@@ -5,7 +5,8 @@ import ValueCountsTooltip from "./ValueCountsTooltip";
 import { roundNum } from "../../Utilities/NumberUtilities";
 import { Typography } from "@material-ui/core";
 
-const StatisticsTable = (props) => {
+const StatisticsTable = props => {
+
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
@@ -22,14 +23,14 @@ const StatisticsTable = (props) => {
         dataToShow.map((row, idx) => ({
           id: idx,
           featureName: row.name,
-          ...row.data,
+          ...row.data
         }))
       );
       const cols = [
         { field: "featureName", headerName: "Feature", width: 150 },
         ...Object.keys(dataToShow[0].data)
-          .filter((key) => key !== "Value Counts") // Value Counts will be handled separately
-          .map((key) => ({
+          .filter(key => key !== "Value Counts") // Value Counts will be handled separately
+          .map(key => ({
             field: key,
             headerName: key,
             width: (() => {
@@ -43,8 +44,8 @@ const StatisticsTable = (props) => {
                 return 100;
               }
             })(), // just hacky to get decent column widths quickly
-            valueFormatter: ({ value }) => roundNum(value, 2),
-          })),
+            valueFormatter: ({ value }) => roundNum(value, 2)
+          }))
       ];
 
       if (!props.numerical) {
@@ -52,7 +53,7 @@ const StatisticsTable = (props) => {
           field: "Value Counts",
           headerName: "Value Counts",
           width: 150,
-          renderCell: (params) => {
+          renderCell: params => {
             const [firstCatName, firstCatCount] = Object.entries(
               params.value
             )[0];
@@ -61,7 +62,7 @@ const StatisticsTable = (props) => {
                 <span>{`${firstCatName}: ${firstCatCount} ...`}</span>
               </ValueCountsTooltip>
             );
-          },
+          }
         });
       }
 
@@ -77,9 +78,9 @@ const StatisticsTable = (props) => {
           columns={columns}
           checkboxSelection
           disableSelectionOnClick
-          onSelectionChange={(selectionParams) =>
+          onSelectionChange={selectionParams =>
             props.onSelectionChange(
-              selectionParams.rows.map((rw) => rw.featureName)
+              selectionParams.rows.map(rw => rw.featureName)
             )
           }
         />

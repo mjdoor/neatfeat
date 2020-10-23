@@ -12,6 +12,7 @@ const createTable = (data, targetColumnName) => {
 
 const updateColumn = (column) => {
   return { type: Types.UPDATE_COLUMN, column };
+
 };
 
 export default {

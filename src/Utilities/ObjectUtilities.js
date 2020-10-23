@@ -15,8 +15,6 @@ export const castNumericColumns = data => {
     return acc;
   }, initialColumnBuilder); // { Feature1: {data: ['1','2','3','fish'], nonNumberValues: ['fish']}}
 
-  console.log(columns);
-
   const naList = ["", "na", "n/a"];
   const columnNumericality = Object.entries(columns).reduce(
     (acc, [featureName, { data, nonNumberValues }]) => {

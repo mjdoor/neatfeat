@@ -55,11 +55,8 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
       }
     });
     return acc;
-<<<<<<< HEAD
-  }, initialColumnBuilder); // populates column arrays { Feature1: [1,2,3...], Feature2...}
-=======
   }, initialColumnBuilder); // populates column arrays { Feature1: {data: [1,2,3...], type: "numerical"}, Feature2...}
->>>>>>> ec0c0c64681523f3e528504088c33f341d59c4bb
+
 
   // grab the target column data for later use
   const targetColumn = columns[targetColumnName].data;

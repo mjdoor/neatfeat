@@ -4,17 +4,17 @@ import { Switch, Grid, Typography } from "@material-ui/core";
 
 import StatisticsTable from "./StatisticsTable";
 
-const StatsData = (props) => {
+const StatsData = props => {
   const [showNumeric, setShowNumeric] = useState(true);
   const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
-  const { statsData } = useSelector((state) => state);
+  const { statsData } = useSelector(state => state);
 
-  const handleSelectionChange = (selectedFeatureNames) => {
+  const handleSelectionChange = selectedFeatureNames => {
     setSelectedFeatures(selectedFeatureNames);
   };
 
   return (
-    <div>
+    <div style={{ padding: 10 }}>
       {statsData !== undefined && (
         <Fragment>
           <Grid component="div" container alignItems="center">
@@ -29,7 +29,7 @@ const StatsData = (props) => {
             <Grid item>
               <Switch
                 checked={showNumeric}
-                onChange={() => setShowNumeric((orig) => !orig)}
+                onChange={() => setShowNumeric(orig => !orig)}
                 name="datatypeSwitch"
               />
             </Grid>
