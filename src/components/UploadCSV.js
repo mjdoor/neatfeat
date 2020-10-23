@@ -17,6 +17,7 @@ const UploadCSV = () => {
   const [uploadError, setUploadError] = useState(false);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+  const dispatch = useDispatch();
 
   const handleOnDrop = data => {
     // Check if file is empty
