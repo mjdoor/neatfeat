@@ -3,18 +3,11 @@ const Types = {
   CREATE_TABLE: "CREATE_TABLE",
   CHANGE_TARGET: "CHANGE_TARGET",
   UPDATE_COLUMN: "UPDATE_COLUMN",
+  CREATE_TABLE: "CREATE_TABLE",
 };
 
-const createTestTable = () => {
-  return { type: Types.CREATE_TEST_TABLE };
-};
-
-const createTable = (data) => {
-  return { type: Types.CREATE_TABLE, data };
-};
-
-const changeTarget = (target) => {
-  return { type: Types.CHANGE_TARGET, target };
+const createTable = (data, targetColumnName) => {
+  return { type: Types.CREATE_TABLE, data, targetColumnName };
 };
 
 const updateColumn = (column) => {
@@ -23,8 +16,6 @@ const updateColumn = (column) => {
 
 export default {
   createTable,
-  createTestTable,
-  changeTarget,
   updateColumn,
   Types,
 };

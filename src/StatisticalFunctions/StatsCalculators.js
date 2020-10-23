@@ -1,5 +1,8 @@
 import {
+<<<<<<< HEAD
   filterNumbers,
+=======
+>>>>>>> ec0c0c64681523f3e528504088c33f341d59c4bb
   mean,
   std,
   min,
@@ -13,7 +16,11 @@ import { filterOutNull, valueCounts } from "./CategoricalStatsFormulas";
 
 export class NumericStatsCalculator {
   constructor(valueArr, targetArr) {
+<<<<<<< HEAD
     const { filteredArr, removedIndices } = filterNumbers(valueArr);
+=======
+    const { filteredArr, removedIndices } = filterOutNull(valueArr);
+>>>>>>> ec0c0c64681523f3e528504088c33f341d59c4bb
     this.valueArr = filteredArr;
     this.targetArr = [...targetArr]; // build a copy of the targetArr to ensure any changes made to targetArr here don't affect it outside this scope
     // remove elements from targetArr that correspond to the removedIndices of the dataArr (assume targetArr doesn't have any missing values)
@@ -59,7 +66,12 @@ export class NumericStatsCalculator {
 
 export class CategoricalStatsCalculator {
   constructor(arr) {
+<<<<<<< HEAD
     this.valueArr = filterOutNull(arr);
+=======
+    const { filteredArr } = filterOutNull(arr);
+    this.valueArr = filteredArr;
+>>>>>>> ec0c0c64681523f3e528504088c33f341d59c4bb
     this.numMissing = arr.length - this.valueArr.length;
   }
 

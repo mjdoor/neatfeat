@@ -1,50 +1,53 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, Switch, Grid, Typography } from "@material-ui/core";
-import ACTIONS from "../../redux/actions";
+import React, { Fragment, useState } from "react";
+import { useSelector } from "react-redux";
+import { Switch, Grid, Typography } from "@material-ui/core";
 
 import StatisticsTable from "./StatisticsTable";
 
-const StatsData = props => {
-  const dispatch = useDispatch();
+const StatsData = (props) => {
   const [showNumeric, setShowNumeric] = useState(true);
-  const { statsData } = useSelector(state => state);
+  const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
+  const { statsData } = useSelector((state) => state);
+
+  const handleSelectionChange = (selectedFeatureNames) => {
+    setSelectedFeatures(selectedFeatureNames);
+  };
 
   return (
     <div>
-      <Grid component="label" container alignItems="center" spacing={1}>
-        <Grid item>
-          <Typography
-            component="p"
-            style={{ fontWeight: showNumeric ? "normal" : "bold" }}
-          >
-            Categorical
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Switch
-            checked={showNumeric}
-            onChange={() => setShowNumeric(orig => !orig)}
-            name="datatypeSwitch"
-          />
-        </Grid>
-        <Typography
-          component="p"
-          style={{ fontWeight: showNumeric ? "bold" : "normal" }}
-        >
-          Numerical
-        </Typography>
-      </Grid>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => dispatch(ACTIONS.createTestTable())}
-      >
-        Test Data
-      </Button>
-      <br />
       {statsData !== undefined && (
-        <StatisticsTable numerical={showNumeric} statsData={statsData} />
+        <Fragment>
+          <Grid component="div" container alignItems="center">
+            <Grid item>
+              <Typography
+                component="p"
+                style={{ fontWeight: showNumeric ? "normal" : "bold" }}
+              >
+                Categorical
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Switch
+                checked={showNumeric}
+                onChange={() => setShowNumeric((orig) => !orig)}
+                name="datatypeSwitch"
+              />
+            </Grid>
+            <Grid item>
+              <Typography
+                component="p"
+                style={{ fontWeight: showNumeric ? "bold" : "normal" }}
+              >
+                Numerical
+              </Typography>
+            </Grid>
+          </Grid>
+          <StatisticsTable
+            numerical={showNumeric}
+            statsData={statsData}
+            onSelectionChange={handleSelectionChange}
+          />
+        </Fragment>
       )}
     </div>
   );

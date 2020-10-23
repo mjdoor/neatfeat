@@ -43,7 +43,7 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
   const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
     acc[featureName] = { data: [], type: "unknown" };
     return acc;
-  }, {}); // builds object { Feature1: [], Feature2: [],...}
+  }, {}); // builds object { Feature1: {data: [], type: "unknown"}, Feature2: {data: [], type: "unknown"},...}
   const columns = rawData.reduce((acc, row) => {
     Object.entries(row).forEach(([featureName, value]) => {
       acc[featureName].data.push(value);
@@ -55,7 +55,11 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
       }
     });
     return acc;
+<<<<<<< HEAD
   }, initialColumnBuilder); // populates column arrays { Feature1: [1,2,3...], Feature2...}
+=======
+  }, initialColumnBuilder); // populates column arrays { Feature1: {data: [1,2,3...], type: "numerical"}, Feature2...}
+>>>>>>> ec0c0c64681523f3e528504088c33f341d59c4bb
 
   // grab the target column data for later use
   const targetColumn = columns[targetColumnName].data;
