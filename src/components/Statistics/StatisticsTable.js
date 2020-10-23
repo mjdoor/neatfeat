@@ -6,6 +6,7 @@ import { roundNum } from "../../Utilities/NumberUtilities";
 import { Typography } from "@material-ui/core";
 
 const StatisticsTable = props => {
+
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 

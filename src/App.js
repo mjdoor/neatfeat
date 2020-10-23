@@ -10,6 +10,7 @@ import UploadCSV from "./components/UploadCSV";
 import StatsData from "./components/Statistics/StatsData";
 
 import { store } from "./redux/store";
+import DataGridTable from "./components/DataGridTable";
 
 function App() {
   return (

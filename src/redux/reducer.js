@@ -4,7 +4,8 @@ import { castNumericColumns } from "../Utilities/ObjectUtilities";
 
 const intitialState = {
   rawData: [],
-  targetColumnName: ""
+  targetColumnName: "",
+  rawColumn: [],
 };
 
 export default (state = intitialState, action) => {
@@ -15,7 +16,15 @@ export default (state = intitialState, action) => {
         ...state,
         rawData: castedData,
         targetColumnName: action.targetColumnName,
-        statsData: generateStatsFromRawData(castedData, action.targetColumnName)
+        statsData: generateStatsFromRawData(
+          castedData,
+          action.targetColumnName
+        ),
+      };
+    case ACTIONS.Types.UPDATE_COLUMN:
+      return {
+        ...state,
+        rawColumn: action.column,
       };
     default:
       return state;

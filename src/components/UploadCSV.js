@@ -3,6 +3,9 @@ import { Button, Typography } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { CSVReader } from "react-papaparse";
 import TargetSelectDialog from "./TargetSelectDialog";
+import ACTIONS from "../redux/actions";
+import { useDispatch } from "react-redux";
+import DataGridTable from "./DataGridTable";
 
 const UploadCSV = () => {
   //Set the position of the button.. Can be deleted if we don't want the button to move
@@ -36,6 +39,8 @@ const UploadCSV = () => {
 
       // Set the columns for the Target Column Select
       setColumns(arrData[0]);
+      //SUE -- I needed the columns too
+      dispatch(ACTIONS.updateColumn(arrData[0]));
       setOpen(true);
 
       // Make the data into an Array of Objects with Features as the keys
@@ -112,6 +117,7 @@ const UploadCSV = () => {
         columns={columns}
         data={data}
       />
+      <DataGridTable />
     </div>
   );
 };
