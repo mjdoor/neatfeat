@@ -72,10 +72,20 @@ const prices = [
   157000,
 ];
 
+const tempColumns = [
+  { key: "Id", name: "ID" },
+  { key: "lotAreas", name: "lotAreas" },
+  { key: "firstFloorSqFts", name: "firstFloorSqFts" },
+  { key: "garageCapacities", name: "garageCapacities" },
+  { key: "exteriorType", name: "exteriorType" },
+  { key: "prices", name: "prices" },
+];
+
 const tempTestData = (() => {
   const data = [];
   for (let i = 0; i < lotAreas.length; i++) {
     data.push({
+      id: i,
       LotArea: lotAreas[i],
       FirstFlrSqFt: firstFloorSqFts[i],
       GarageCapacity: garageCapacities[i],
@@ -90,7 +100,7 @@ const tempTestData = (() => {
 const intitialState = {
   rawData: tempTestData,
   targetColumnName: "Test",
-  rawColumn: null,
+  rawColumn: tempColumns,
 };
 
 export default (state = intitialState, action) => {

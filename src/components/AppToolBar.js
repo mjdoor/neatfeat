@@ -16,7 +16,6 @@ const AppToolBar = () => {
         </Toolbar>
       </AppBar>
       <UploadCSV />
-      <DataGridTable />
     </div>
   );
 };
