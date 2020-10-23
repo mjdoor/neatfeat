@@ -14,7 +14,7 @@ const StatsData = props => {
   };
 
   return (
-    <div>
+    <div style={{ padding: 10 }}>
       {statsData !== undefined && (
         <Fragment>
           <Grid component="div" container alignItems="center">
