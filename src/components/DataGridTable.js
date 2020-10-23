@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DataGrid from "react-data-grid";
 import "react-data-grid/dist/react-data-grid.css";
 import { useSelector } from "react-redux";
@@ -7,41 +7,24 @@ import { useSelector } from "react-redux";
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
   const [columns, setColumns] = React.useState([]);
-  var arrayOfData = [];
-  var arrayOfColumns = [];
   const { rawData, rawColumn } = useSelector((state) => state);
 
-  const TransformData = async () => {
-    arrayOfData = await rawData;
-    arrayOfColumns = await rawColumn;
-
-    var columnOutputData = await arrayOfColumns.map(function (x) {
-      return {
-        key: x,
-        name: x,
-      };
-    });
-    console.log(arrayOfData);
-    //console.log(columnOutput.entries());
-
-    //setColumns(columnOutputData);
-    setRows(arrayOfData);
-
-    console.log(arrayOfData);
-  };
-  TransformData();
+  useEffect(() => {
+    if (rawData.length > 15) {
+      var columnOutputData = rawColumn.map(function (x) {
+        return {
+          key: x,
+          name: x,
+        };
+      });
+      setColumns(columnOutputData);
+      setRows(rawData);
+    }
+  }, [rawData, rawColumn]);
 
   return (
     <div style={{ padding: 10 }}>
-      {columns != undefined && (
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          // checkboxSelection
-          // disableSelectionOnClick
-          // onCellHover={(cellParams) => console.log(cellParams)}
-        />
-      )}
+      {columns != undefined && <DataGrid columns={columns} rows={rows} />}
     </div>
   );
 };
