@@ -5,7 +5,6 @@ import { CSVReader } from "react-papaparse";
 import TargetSelectDialog from "./TargetSelectDialog";
 import ACTIONS from "../redux/actions";
 import { useDispatch } from "react-redux";
-import DataGridTable from "./DataGridTable";
 
 const UploadCSV = () => {
   //Set the position of the button.. Can be deleted if we don't want the button to move
@@ -118,7 +117,6 @@ const UploadCSV = () => {
         columns={columns}
         data={data}
       />
-      <DataGridTable />
     </div>
   );
 };

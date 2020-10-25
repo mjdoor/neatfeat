@@ -6,17 +6,17 @@ import { Provider } from "react-redux";
 import theme from "./themes/theme";
 
 import AppToolBar from "./components/AppToolBar";
-import UploadCSV from "./components/UploadCSV";
+import DataGridTable from "./components/DataGridTable";
 import StatsData from "./components/Statistics/StatsData";
 
 import { store } from "./redux/store";
-import DataGridTable from "./components/DataGridTable";
 
 function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <AppToolBar />
+        <DataGridTable />
         <StatsData />
       </ThemeProvider>
     </Provider>
