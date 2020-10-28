@@ -59,8 +59,9 @@ export const pearsonCorr = (dataArr, targetArr, xMean, yMean) => {
     yDiffSquaredSum += Math.pow(targetArr[i] - yMean, 2);
   }
 
-  return (
+  const result =
     xDiffyDiffProdSum /
-    (Math.sqrt(xDiffSquaredSum) * Math.sqrt(yDiffSquaredSum))
-  );
+    (Math.sqrt(xDiffSquaredSum) * Math.sqrt(yDiffSquaredSum));
+
+  return Number.isNaN(result) ? 0 : result;
 };

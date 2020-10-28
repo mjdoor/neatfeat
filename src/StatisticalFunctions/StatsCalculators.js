@@ -1,5 +1,4 @@
 import {
-  filterNumbers,
   mean,
   std,
   min,

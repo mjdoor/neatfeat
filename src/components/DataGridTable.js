@@ -7,16 +7,16 @@ import { useSelector } from "react-redux";
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
   const [columns, setColumns] = React.useState([]);
-  const { rawData, rawColumn } = useSelector(state => state);
+  const { rawData, columnNames } = useSelector(state => state);
 
   useEffect(() => {
     if (
       rawData !== undefined &&
       rawData.length > 0 &&
-      rawColumn !== undefined &&
-      rawColumn.length > 0
+      columnNames !== undefined &&
+      columnNames.length > 0
     ) {
-      const columnOutputData = rawColumn.map(colName => {
+      const columnOutputData = columnNames.map(colName => {
         return {
           key: colName,
           name: colName
@@ -31,7 +31,7 @@ const DataGridTable = () => {
       setColumns(columnOutputData);
       setRows(rawDataWithIds);
     }
-  }, [rawData, rawColumn]);
+  }, [rawData, columnNames]);
 
   return (
     <div style={{ padding: 10 }}>
