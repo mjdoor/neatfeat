@@ -13,9 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import ACTIONS from "../../redux/actions";
 
-import ExampleOptions from "../Transformations/ExampleOptions";
-import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformerWithOptions";
-import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
+import NumericalMissingDataOptions from "../Transformations/NumericalMissingDataOptions";
+import NumericalMissingDataTransformer from "../../Transformers/NumericalMissingDataTransformer";
+import CategoricalMissingDataOptions from "../Transformations/CategoricalMissingDataOptions";
+import CategoricalMissingDataTransformer from "../../Transformers/CategoricalMissingDataTransformer";
 import ScalingTransformer from "../../Transformers/ScalingTransformer";
 import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
 import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
@@ -27,17 +28,18 @@ const allTransformers = {
     {
       name: "One Hot Encoding",
       transformFunction: OneHotEncodingTransformation
+    },
+    {
+      name: "Handle Missing Data",
+      transformFunction: CategoricalMissingDataTransformer,
+      optionComponent: CategoricalMissingDataOptions
     }
   ],
   numerical: [
     {
-      name: "Example Transformer",
-      transformFunction: ExampleTransformerWithOptions,
-      optionComponent: ExampleOptions
-    },
-    {
-      name: "Example Transformer without Options",
-      transformFunction: ExampleTransformerWithoutOptions
+      name: "Handle Missing Data",
+      transformFunction: NumericalMissingDataTransformer,
+      optionComponent: NumericalMissingDataOptions
     },
     {
       name: "Scale",
@@ -77,7 +79,11 @@ const StatsData = props => {
       setOptionComponentTransformer(selectedTransformer);
     } else {
       updateData(
-        selectedTransformer.transformFunction(rawData, selectedFeatures)
+        selectedTransformer.transformFunction(
+          rawData,
+          selectedFeatures,
+          statsData // added statsData in case it can be useful for the transformation.
+        )
       );
     }
   };
@@ -87,7 +93,8 @@ const StatsData = props => {
       optionComponentTransformer.transformFunction(
         rawData,
         selectedFeatures,
-        options
+        options,
+        statsData // added statsData in case it can be useful for the transformation.
       )
     );
   };
@@ -162,6 +169,7 @@ const StatsData = props => {
           />
           {optionComponentTransformer && (
             <OptionComponent
+              featureNames={selectedFeatures}
               onClose={() => setOptionComponentTransformer(null)}
               onTransform={handleTransformWithOptions}
             />

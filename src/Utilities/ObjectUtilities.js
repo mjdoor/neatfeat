@@ -7,7 +7,8 @@ export const castNumericColumns = data => {
   }, {});
   const columns = data.reduce((acc, row) => {
     Object.entries(row).forEach(([featureName, value]) => {
-      if (Number.isNaN(Number(value))) {
+      value = value.trim();
+      if (Number.isNaN(Number(value)) || value === "") {
         acc[featureName].nonNumberValues.push(value);
       }
       acc[featureName].data.push(value);
@@ -41,14 +42,14 @@ export const castNumericColumns = data => {
   return data.map(row => {
     return Object.entries(row).reduce((acc, [featureName, value]) => {
       if (columnNumericality[featureName]) {
-        const numVal = Number(value);
+        const numVal = value.trim() === "" ? NaN : Number(value);
         if (Number.isNaN(numVal)) {
           acc[featureName] = null;
         } else {
           acc[featureName] = numVal;
         }
       } else {
-        acc[featureName] = value;
+        acc[featureName] = value.trim() === "" ? null : value; // convert empty strings to null while we're at it
       }
       return acc;
     }, {});
