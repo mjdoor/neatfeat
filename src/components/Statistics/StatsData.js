@@ -20,6 +20,7 @@ import CategoricalMissingDataTransformer from "../../Transformers/CategoricalMis
 import ScalingTransformer from "../../Transformers/ScalingTransformer";
 import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
 import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
+import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
 
 import StatisticsTable from "./StatisticsTable";
 
@@ -107,6 +108,35 @@ const StatsData = props => {
     setSelectedFeatures(selectedFeatureNames);
   };
 
+  const allTransformers = {
+    categorical: [
+      {
+        name: "Handle Missing Data",
+        transformFunction: CategoricalMissingDataTransformer,
+        optionComponent: CategoricalMissingDataOptions
+      }
+    ],
+    numerical: [
+      {
+        name: "Handle Missing Data",
+        transformFunction: NumericalMissingDataTransformer,
+        optionComponent: NumericalMissingDataOptions
+      },
+      {
+        name: "Mathematically Combine",
+        transformFunction: () => {
+          /*TODO*/
+        },
+        optionComponent: props => (
+          <MathematicalCombinationOptions
+            selectedFeatures={selectedFeatures}
+            {...props}
+          />
+        )
+      }
+    ]
+  };
+
   const availableTransformers = showNumeric
     ? allTransformers.numerical
     : allTransformers.categorical;
@@ -169,7 +199,6 @@ const StatsData = props => {
           />
           {optionComponentTransformer && (
             <OptionComponent
-              featureNames={selectedFeatures}
               onClose={() => setOptionComponentTransformer(null)}
               onTransform={handleTransformWithOptions}
             />
