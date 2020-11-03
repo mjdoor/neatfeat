@@ -21,6 +21,7 @@ import ScalingTransformer from "../../Transformers/ScalingTransformer";
 import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
 import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
 import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
+import MathemticalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 
 import StatisticsTable from "./StatisticsTable";
 
