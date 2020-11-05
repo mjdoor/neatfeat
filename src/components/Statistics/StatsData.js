@@ -21,7 +21,7 @@ import ScalingTransformer from "../../Transformers/ScalingTransformer";
 import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
 import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
 import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
-import MathemticalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
+import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 
 import StatisticsTable from "./StatisticsTable";
 
@@ -125,9 +125,7 @@ const StatsData = props => {
       },
       {
         name: "Mathematically Combine",
-        transformFunction: () => {
-          /*TODO*/
-        },
+        transformFunction: MathematicalCombinationTransformer,
         optionComponent: props => (
           <MathematicalCombinationOptions
             selectedFeatures={selectedFeatures}

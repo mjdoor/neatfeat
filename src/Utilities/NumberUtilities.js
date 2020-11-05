@@ -1,5 +1,5 @@
 export const roundNum = (num, places) => {
-  if (!Number.isNaN) {
+  if (isNaN(Number(num))) {
     return num;
   }
   if (!Number.isInteger(places)) {

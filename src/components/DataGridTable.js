@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
+import { roundNum } from "../Utilities/NumberUtilities";
 
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
@@ -18,7 +19,8 @@ const DataGridTable = () => {
         return {
           field: colName,
           headerName: colName,
-          width: 150
+          width: 150,
+          valueFormatter: ({ value }) => roundNum(value, 2)
         };
       });
       const rawDataWithIds = rawData[0].hasOwnProperty("id")
