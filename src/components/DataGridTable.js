@@ -1,11 +1,26 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
   const [columns, setColumns] = React.useState([]);
   const { rawData, columnNames } = useSelector(state => state);
+  const [deletedRows, setDeletedRows] = React.useState([]);
+
+  const handleRowSelection = e => {
+    console.log("row selected");
+    setDeletedRows([...deletedRows, ...rows.filter(r => r.id === e.data.id)]);
+  };
+
+  const deleteRows = () => {
+    console.log("delete button");
+    setRows(
+      rows.filter(r => deletedRows.filter(sr => sr.id === r.id).length < 1)
+    );
+  };
 
   useEffect(() => {
     if (
@@ -36,12 +51,23 @@ const DataGridTable = () => {
     <div style={{ height: "400px", marginBottom: "50px", padding: 10 }}>
       {columns.length > 0 && (
         <div>
+          <IconButton
+            aria-label="delete"
+            color="black"
+            onClick={() => deleteRows()}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <div />
           <div style={{ marginTop: "10px", height: "400px" }}>
             <DataGrid
               columns={columns}
               rows={rows}
               rowsPerPageOptions={[5, 10, 25, 50, 100]}
               pageSize={5}
+              checkboxSelection
+              onRowSelected={handleRowSelection}
+              disableSelectionOnClick
             />
           </div>
         </div>
