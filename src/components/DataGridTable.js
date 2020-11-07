@@ -9,6 +9,7 @@ const DataGridTable = () => {
   const [columns, setColumns] = React.useState([]);
   const { rawData, columnNames } = useSelector(state => state);
   const [deletedRows, setDeletedRows] = React.useState([]);
+  const [msg, setMsg] = React.useState("");
 
   const handleRowSelection = e => {
     console.log("row selected");
@@ -17,6 +18,8 @@ const DataGridTable = () => {
 
   const deleteRows = () => {
     console.log("delete button");
+    console.log(deletedRows.length);
+    setMsg(deletedRows.length + " rows deleted.");
     setRows(
       rows.filter(r => deletedRows.filter(sr => sr.id === r.id).length < 1)
     );
@@ -48,7 +51,7 @@ const DataGridTable = () => {
   }, [rawData, columnNames]);
 
   return (
-    <div style={{ height: "400px", marginBottom: "50px", padding: 10 }}>
+    <div style={{ height: "400px", marginBottom: "100px", padding: 10 }}>
       {columns.length > 0 && (
         <div>
           <IconButton
@@ -58,8 +61,9 @@ const DataGridTable = () => {
           >
             <DeleteIcon />
           </IconButton>
+          <p style={{ fontWeight: "bolder" }}>{msg}</p>
           <div />
-          <div style={{ marginTop: "10px", height: "400px" }}>
+          <div style={{ marginTop: "30px", height: "400px" }}>
             <DataGrid
               columns={columns}
               rows={rows}
