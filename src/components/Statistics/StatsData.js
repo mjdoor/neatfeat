@@ -49,7 +49,7 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData } = useSelector(state => state);
+  const { rawData, statsData, data } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -119,6 +119,13 @@ const StatsData = props => {
               >
                 Numerical
               </Typography>
+            </Grid>
+            <Grid item>
+              <SelectScalingNormalization
+                columns={statsData.numericColumns}
+                data={data}
+                target={selectedFeatures}
+              ></SelectScalingNormalization>
             </Grid>
             <Grid item style={{ marginLeft: "auto" }}>
               <FormControl
