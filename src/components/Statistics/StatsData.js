@@ -18,6 +18,7 @@ import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformer
 import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
 import SelectScalingNormalization from 
 "../SelectScalingNormalization";
+import ScalingNormalization  from "../../Transformers/ScalingNormalization";
 
 import StatisticsTable from "./StatisticsTable";
 
@@ -32,6 +33,10 @@ const allTransformers = {
     {
       name: "Example Transformer without Options",
       transformFunction: ExampleTransformerWithoutOptions
+    },
+    {
+      name: "Scaling",
+      transformFunction: ScalingNormalization
     }
   ]
 };
