@@ -56,7 +56,7 @@ const DataGridTable = () => {
         <div>
           <IconButton
             aria-label="delete"
-            color="black"
+            color="secondary"
             onClick={() => deleteRows()}
           >
             <DeleteIcon />
