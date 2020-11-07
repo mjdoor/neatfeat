@@ -26,7 +26,7 @@ export const castNumericColumns = data => {
           nonNumberValues.filter(
             nonNum =>
               naList.findIndex(
-                na => na.toLowerCase() === nonNum.toLowerCase()
+                na => na.toLowerCase() === nonNum?.toLowerCase()
               ) === -1
           ).length === 0
         ) {

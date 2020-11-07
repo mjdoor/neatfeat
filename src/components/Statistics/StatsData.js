@@ -16,6 +16,8 @@ import ACTIONS from "../../redux/actions";
 import ExampleOptions from "../Transformations/ExampleOptions";
 import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformerWithOptions";
 import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
+import SelectScalingNormalization from 
+"../SelectScalingNormalization";
 
 import StatisticsTable from "./StatisticsTable";
 

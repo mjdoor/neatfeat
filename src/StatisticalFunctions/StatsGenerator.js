@@ -79,6 +79,12 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     })
   );
 
+  const numericColumns = Object.entries(numeric_columns).map(
+    ([featureName, values]) => (
+      featureName
+    )
+  )
+
   const categoricalStatsData = Object.entries(categorical_columns).map(
     ([featureName, values]) => ({
       name: featureName,
@@ -86,7 +92,7 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     })
   );
 
-  return { numerical: numericStatsData, categorical: categoricalStatsData };
+  return { numerical: numericStatsData, categorical: categoricalStatsData, numericColumns: numericColumns };
 };
 
 export default generateStatsFromRawData;

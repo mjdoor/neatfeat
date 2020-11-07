@@ -1,11 +1,14 @@
 import ACTIONS from "./actions";
 import generateStatsFromRawData from "../StatisticalFunctions/StatsGenerator";
 import { castNumericColumns } from "../Utilities/ObjectUtilities";
+import generateScaledNormalizationfromRawData from "../StatisticalFunctions/ScalingNormalization";
 
 const intitialState = {
   rawData: [],
   targetColumnName: "",
-  columnNames: []
+  columnNames: [],
+  newRawData: [],
+  data: []
 };
 
 export default (state = intitialState, action) => {
@@ -16,7 +19,8 @@ export default (state = intitialState, action) => {
         ...state,
         rawData: castedData,
         targetColumnName: action.targetColumnName,
-        statsData: generateStatsFromRawData(castedData, action.targetColumnName)
+        statsData: generateStatsFromRawData(castedData, action.targetColumnName),
+        data: castedData
       };
     case ACTIONS.Types.UPDATE_COLUMNS:
       return {
@@ -33,6 +37,18 @@ export default (state = intitialState, action) => {
         ),
         columnNames: Object.keys(action.updatedData[0])
       };
+      case ACTIONS.Types.SCALING_NORMALIZATION_CONVERSION:
+        const castedData2 = castNumericColumns(action.data);
+        return {
+          ...state,
+          selectedColumns: action.selectedColumns,
+          updated: action.updated,
+          newRawData: generateScaledNormalizationfromRawData(
+           castedData2,
+           action.selectedColumns,
+           action.option
+          )
+        }
     default:
       return state;
   }
