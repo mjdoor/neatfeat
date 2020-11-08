@@ -18,7 +18,6 @@ import {
       },
       ...
     ]
-
     Want statsData of the form: 
     {
      numerical: [
@@ -57,7 +56,6 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     return acc;
   }, initialColumnBuilder); // populates column arrays { Feature1: {data: [1,2,3...], type: "numerical"}, Feature2...}
 
-
   // grab the target column data for later use
   const targetColumn = columns[targetColumnName].data;
 
@@ -79,12 +77,6 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     })
   );
 
-  const numericColumns = Object.entries(numeric_columns).map(
-    ([featureName, values]) => (
-      featureName
-    )
-  )
-
   const categoricalStatsData = Object.entries(categorical_columns).map(
     ([featureName, values]) => ({
       name: featureName,
@@ -92,7 +84,7 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     })
   );
 
-  return { numerical: numericStatsData, categorical: categoricalStatsData, numericColumns: numericColumns };
+  return { numerical: numericStatsData, categorical: categoricalStatsData };
 };
 
 export default generateStatsFromRawData;

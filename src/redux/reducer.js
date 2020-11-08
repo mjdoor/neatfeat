@@ -1,7 +1,6 @@
 import ACTIONS from "./actions";
 import generateStatsFromRawData from "../StatisticalFunctions/StatsGenerator";
 import { castNumericColumns } from "../Utilities/ObjectUtilities";
-import generateScaledNormalizationfromRawData from "../StatisticalFunctions/ScalingNormalization";
 
 const intitialState = {
   rawData: [],
@@ -17,8 +16,7 @@ export default (state = intitialState, action) => {
         ...state,
         rawData: castedData,
         targetColumnName: action.targetColumnName,
-        statsData: generateStatsFromRawData(castedData, action.targetColumnName),
-        data: castedData
+        statsData: generateStatsFromRawData(castedData, action.targetColumnName)
       };
     case ACTIONS.Types.UPDATE_COLUMNS:
       return {

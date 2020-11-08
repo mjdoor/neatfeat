@@ -5,7 +5,7 @@ export const roundNum = (num, places) => {
   if (!Number.isInteger(places)) {
     places = Math.round(places);
   }
-  if (places === 0) {
+  if (places === 0 || places === null || places === undefined) {
     return Math.round(num);
   }
   if (places > 10) {
