@@ -18,11 +18,17 @@ import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformer
 import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
 import ScalingTransformer from "../../Transformers/ScalingTransformer";
 import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
+import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
 
 import StatisticsTable from "./StatisticsTable";
 
 const allTransformers = {
-  categorical: [],
+  categorical: [
+    {
+      name: "One Hot Encoding",
+      transformFunction: OneHotEncodingTransformation
+    }
+  ],
   numerical: [
     {
       name: "Example Transformer",
