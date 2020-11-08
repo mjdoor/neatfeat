@@ -34,6 +34,7 @@ const MathematicalCombinationOptions = props => {
   const [formulaTerms, setFormulaTerms] = useState([]);
   const [featureNameError, setFeatureNameError] = useState(null);
   const [formulaError, setFormulaError] = useState(null);
+  const [formulaBoxSelected, setFormulaBoxSelected] = useState(false);
   const [formulaExample, setFormulaExample] = useState("");
   const existingColumnNames = useSelector(state => state.columnNames);
 
@@ -63,6 +64,29 @@ const MathematicalCombinationOptions = props => {
     setFormulaExample(`e.g. ${examples[randomExampleIndex]}`);
     // eslint-disable-next-line
   }, [formulaTerms]);
+
+  // this useEffect added to reconcile issue where a checkFormula function (with a body of most of this useEffect function), was running before the final
+  // formula term was added to the formulaTerms array when the user clicks out of the formula box instead of hitting enter before leaving
+  // This race condition type thing was a result of onBlur of TextField vs. how ever the autoSelect is handled in the Autocomplete
+  // There's probably a nicer form validation type solution for this, but this works for now
+  useEffect(() => {
+    if (!formulaBoxSelected) {
+      try {
+        evaluate(
+          formulaTerms
+            .map(term => {
+              if (typeof term === "object") {
+                return term.type === "Feature" ? Math.random() : term.name; // put random numbers in place of the features just to check if the syntax works out
+              } else return term.trim();
+            })
+            .join("")
+        );
+        setFormulaError(null);
+      } catch (err) {
+        setFormulaError(err.message.split("(")[0]); // take the error message up to the first bracket (which usually just contains the character number)
+      }
+    }
+  }, [formulaTerms, formulaBoxSelected]);
 
   const formulaOptions = [
     ...props.selectedFeatures.map(featureName => ({
@@ -122,23 +146,6 @@ const MathematicalCombinationOptions = props => {
         `The feature name ${newFeatureName} is already in use`
       );
     } else setFeatureNameError(null);
-  };
-
-  const checkFormula = () => {
-    try {
-      evaluate(
-        formulaTerms
-          .map(term => {
-            if (typeof term === "object") {
-              return term.type === "Feature" ? Math.random() : term.name; // put random numbers in place of the features just to check if the syntax works out
-            } else return term.trim();
-          })
-          .join("")
-      );
-      setFormulaError(null);
-    } catch (err) {
-      setFormulaError(err.message.split("(")[0]); // take the error message up to the first bracket (which usually just contains the character number)
-    }
   };
 
   const shouldDisable =
@@ -213,7 +220,8 @@ const MathematicalCombinationOptions = props => {
                   placeholder={
                     formulaTerms.length === 0 ? formulaExample : null
                   }
-                  onBlur={checkFormula}
+                  onFocus={() => setFormulaBoxSelected(true)}
+                  onBlur={() => setFormulaBoxSelected(false)}
                   error={formulaError !== null}
                   helperText={formulaError}
                 />
