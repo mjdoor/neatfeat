@@ -6,7 +6,7 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
+  InputLabel
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -16,56 +16,56 @@ import ACTIONS from "../../redux/actions";
 import ExampleOptions from "../Transformations/ExampleOptions";
 import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformerWithOptions";
 import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
-import DeleteSelectedRows from "../../Transformers/DeleteSelectedRows";
+import DeleteColumns from "../../Transformers/DeleteColumns";
 
 import StatisticsTable from "./StatisticsTable";
 
 const allTransformers = {
   categorical: [
     {
-      name: "Delete Selected Rows",
-      transformFunction: DeleteSelectedRows,
-    },
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
   ],
   numerical: [
     {
       name: "Example Transformer",
       transformFunction: ExampleTransformerWithOptions,
-      optionComponent: ExampleOptions,
+      optionComponent: ExampleOptions
     },
     {
       name: "Example Transformer without Options",
-      transformFunction: ExampleTransformerWithoutOptions,
+      transformFunction: ExampleTransformerWithoutOptions
     },
     {
-      name: "Delete Selected Rows",
-      transformFunction: DeleteSelectedRows,
-    },
-  ],
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
+  ]
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 150,
-  },
+    minWidth: 150
+  }
 }));
 //TODO: get selected rows to delete from transformer
 
-const StatsData = (props) => {
+const StatsData = props => {
   const [showNumeric, setShowNumeric] = useState(true);
   const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData } = useSelector((state) => state);
+  const { rawData, statsData } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
 
-  const handleTransformationSelect = (transformerName) => {
+  const handleTransformationSelect = transformerName => {
     const selectedTransformer = availableTransformers.find(
-      (t) => t.name === transformerName
+      t => t.name === transformerName
     );
 
     if (selectedTransformer.hasOwnProperty("optionComponent")) {
@@ -77,7 +77,7 @@ const StatsData = (props) => {
     }
   };
 
-  const handleTransformWithOptions = (options) => {
+  const handleTransformWithOptions = options => {
     updateData(
       optionComponentTransformer.transformFunction(
         rawData,
@@ -87,11 +87,11 @@ const StatsData = (props) => {
     );
   };
 
-  const updateData = (transformedData) => {
+  const updateData = transformedData => {
     dispatch(ACTIONS.updateTable(transformedData));
   };
 
-  const handleSelectionChange = (selectedFeatureNames) => {
+  const handleSelectionChange = selectedFeatureNames => {
     setSelectedFeatures(selectedFeatureNames);
   };
 
@@ -117,7 +117,7 @@ const StatsData = (props) => {
             <Grid item>
               <Switch
                 checked={showNumeric}
-                onChange={() => setShowNumeric((orig) => !orig)}
+                onChange={() => setShowNumeric(orig => !orig)}
                 name="datatypeSwitch"
               />
             </Grid>
@@ -137,7 +137,7 @@ const StatsData = (props) => {
                 <InputLabel>Transformations</InputLabel>
                 <Select
                   value={""}
-                  onChange={(event) =>
+                  onChange={event =>
                     handleTransformationSelect(event.target.value)
                   }
                 >
