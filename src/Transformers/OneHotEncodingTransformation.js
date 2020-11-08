@@ -10,14 +10,22 @@ const OneHotEncodingTransformation = (data, selectedColumns) => {
     });
     featureArr.push({ column: columnName, values: arr });
   });
-  console.log(featureArr);
+
   featureArr.forEach((valueArr) => {
     const column = valueArr.column;
     valueArr.values.forEach((valueName) => {
       data
         .filter((r) => r[column] === valueName)
         .forEach((row) => {
-          row[column] = makeOneHot(valueName, valueArr);
+          const oneHot = makeOneHot(valueName, valueArr);
+
+          console.log(valueName);
+          for (var i = 0; i < oneHot.length; i++) {
+            row[column + "_" + valueArr.values[i]] = makeOneHot(
+              valueName,
+              valueArr
+            )[i];
+          }
         });
     });
   });
