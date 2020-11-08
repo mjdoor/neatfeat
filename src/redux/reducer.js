@@ -6,9 +6,7 @@ import generateScaledNormalizationfromRawData from "../StatisticalFunctions/Scal
 const intitialState = {
   rawData: [],
   targetColumnName: "",
-  columnNames: [],
-  newRawData: [],
-  data: []
+  columnNames: []
 };
 
 export default (state = intitialState, action) => {
@@ -37,18 +35,6 @@ export default (state = intitialState, action) => {
         ),
         columnNames: Object.keys(action.updatedData[0])
       };
-      case ACTIONS.Types.SCALING_NORMALIZATION_CONVERSION:
-        const castedData2 = castNumericColumns(action.data);
-        return {
-          ...state,
-          selectedColumns: action.selectedColumns,
-          updated: action.updated,
-          newRawData: generateScaledNormalizationfromRawData(
-           castedData2,
-           action.selectedColumns,
-           action.option
-          )
-        }
     default:
       return state;
   }

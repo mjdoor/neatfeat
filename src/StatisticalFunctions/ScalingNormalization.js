@@ -54,7 +54,7 @@ const generateScaledNormalizationfromRawData = (rawData, selectedColumns, option
 
     for( let i = 0; i < selectedColumnsArr.length; i++) {
         for( let j = 0; j < selectedColumnsArr[i].data.length; j++) {
-            if(option === "scaling") {
+            if(option === "Scaling") {
               if(selectedColumnsArr[i].data[j] === null) {
                   scaledOrNormArr.push("NA");
               }

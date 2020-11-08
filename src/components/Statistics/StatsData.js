@@ -16,8 +16,6 @@ import ACTIONS from "../../redux/actions";
 import ExampleOptions from "../Transformations/ExampleOptions";
 import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformerWithOptions";
 import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
-import SelectScalingNormalization from 
-"../SelectScalingNormalization";
 import ScalingNormalization  from "../../Transformers/ScalingNormalization";
 
 import StatisticsTable from "./StatisticsTable";
@@ -37,6 +35,10 @@ const allTransformers = {
     {
       name: "Scaling",
       transformFunction: ScalingNormalization
+    },
+    {
+      name: "Normalization",
+      transformFunction: ScalingNormalization
     }
   ]
 };
@@ -54,7 +56,7 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData, data } = useSelector(state => state);
+  const { rawData, statsData, data, targetColumnName } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -67,9 +69,17 @@ const StatsData = props => {
     if (selectedTransformer.hasOwnProperty("optionComponent")) {
       setOptionComponentTransformer(selectedTransformer);
     } else {
-      updateData(
-        selectedTransformer.transformFunction(rawData, selectedFeatures)
-      );
+      if(transformerName === "Scaling" || transformerName === "Normalization") {
+        const option = (transformerName === "Scaling") ? "Scaling" : "Normalization";
+        const newRawData = selectedTransformer.transformFunction(data, selectedFeatures, option, true);
+
+        scalNormUpdateUpperTable(newRawData);
+      }
+      else {
+        updateData(
+          selectedTransformer.transformFunction(rawData, selectedFeatures)
+        );
+      }      
     }
   };
 
@@ -82,6 +92,10 @@ const StatsData = props => {
       )
     );
   };
+  
+  const scalNormUpdateUpperTable = (newRawData) => {
+    dispatch(ACTIONS.createTable(newRawData, targetColumnName));
+  }
 
   const updateData = transformedData => {
     dispatch(ACTIONS.updateTable(transformedData));
@@ -124,13 +138,6 @@ const StatsData = props => {
               >
                 Numerical
               </Typography>
-            </Grid>
-            <Grid item>
-              <SelectScalingNormalization
-                columns={statsData.numericColumns}
-                data={data}
-                target={selectedFeatures}
-              ></SelectScalingNormalization>
             </Grid>
             <Grid item style={{ marginLeft: "auto" }}>
               <FormControl
