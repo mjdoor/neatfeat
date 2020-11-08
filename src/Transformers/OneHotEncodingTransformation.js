@@ -19,13 +19,13 @@ const OneHotEncodingTransformation = (data, selectedColumns) => {
         .forEach((row) => {
           const oneHot = makeOneHot(valueName, valueArr);
 
-          console.log(valueName);
           for (var i = 0; i < oneHot.length; i++) {
             row[column + "_" + valueArr.values[i]] = makeOneHot(
               valueName,
               valueArr
             )[i];
           }
+          delete row[column];
         });
     });
   });
