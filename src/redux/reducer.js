@@ -30,7 +30,8 @@ export default (state = intitialState, action) => {
         statsData: generateStatsFromRawData(
           action.updatedData,
           state.targetColumnName
-        )
+        ),
+        columnNames: Object.keys(action.updatedData[0])
       };
     default:
       return state;
