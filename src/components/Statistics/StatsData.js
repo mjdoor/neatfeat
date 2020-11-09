@@ -25,35 +25,6 @@ import MathematicalCombinationTransformer from "../../Transformers/MathematicalC
 
 import StatisticsTable from "./StatisticsTable";
 
-const allTransformers = {
-  categorical: [
-    {
-      name: "One Hot Encoding",
-      transformFunction: OneHotEncodingTransformation
-    },
-    {
-      name: "Handle Missing Data",
-      transformFunction: CategoricalMissingDataTransformer,
-      optionComponent: CategoricalMissingDataOptions
-    }
-  ],
-  numerical: [
-    {
-      name: "Handle Missing Data",
-      transformFunction: NumericalMissingDataTransformer,
-      optionComponent: NumericalMissingDataOptions
-    },
-    {
-      name: "Scale",
-      transformFunction: ScalingTransformer
-    },
-    {
-      name: "Normalize",
-      transformFunction: NormalizationTransformer
-    }
-  ]
-};
-
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
@@ -84,7 +55,7 @@ const StatsData = props => {
         selectedTransformer.transformFunction(
           rawData,
           selectedFeatures,
-          statsData // added statsData in case it can be useful for the transformation.
+          statsData
         )
       );
     }
@@ -96,7 +67,7 @@ const StatsData = props => {
         rawData,
         selectedFeatures,
         options,
-        statsData // added statsData in case it can be useful for the transformation.
+        statsData
       )
     );
   };
@@ -115,6 +86,10 @@ const StatsData = props => {
         name: "Handle Missing Data",
         transformFunction: CategoricalMissingDataTransformer,
         optionComponent: CategoricalMissingDataOptions
+      },
+      {
+        name: "One Hot Encoding",
+        transformFunction: OneHotEncodingTransformation
       }
     ],
     numerical: [
@@ -122,6 +97,14 @@ const StatsData = props => {
         name: "Handle Missing Data",
         transformFunction: NumericalMissingDataTransformer,
         optionComponent: NumericalMissingDataOptions
+      },
+      {
+        name: "Scale",
+        transformFunction: ScalingTransformer
+      },
+      {
+        name: "Normalize",
+        transformFunction: NormalizationTransformer
       },
       {
         name: "Mathematically Combine",

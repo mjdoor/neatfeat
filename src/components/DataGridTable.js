@@ -20,7 +20,7 @@ const DataGridTable = () => {
           field: colName,
           headerName: colName,
           width: 150,
-          valueFormatter: ({ value }) => roundNum(value, 2)
+          valueFormatter: ({ value }) => roundNum(value, 3)
         };
       });
       const rawDataWithIds = rawData[0].hasOwnProperty("id")
