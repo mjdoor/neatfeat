@@ -22,7 +22,7 @@ import NormalizationTransformer from "../../Transformers/NormalizationTransforme
 import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
 import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
 import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
-
+import DeleteColumns from "../../Transformers/DeleteColumns";
 import StatisticsTable from "./StatisticsTable";
 
 const useStyles = makeStyles(theme => ({
@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: 150
   }
 }));
+//TODO: get selected rows to delete from transformer
 
 const StatsData = props => {
   const [showNumeric, setShowNumeric] = useState(true);
@@ -90,7 +91,11 @@ const StatsData = props => {
       {
         name: "One Hot Encoding",
         transformFunction: OneHotEncodingTransformation
-      }
+      },
+    {
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
     ],
     numerical: [
       {
@@ -115,7 +120,11 @@ const StatsData = props => {
             {...props}
           />
         )
-      }
+      },
+    {
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
     ]
   };
 

@@ -1,12 +1,30 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { roundNum } from "../Utilities/NumberUtilities";
 
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
   const [columns, setColumns] = React.useState([]);
   const { rawData, columnNames } = useSelector(state => state);
+  const [deletedRows, setDeletedRows] = React.useState([]);
+  const [msg, setMsg] = React.useState("");
+
+  const handleRowSelection = e => {
+    console.log("row selected");
+    setDeletedRows([...deletedRows, ...rows.filter(r => r.id === e.data.id)]);
+  };
+
+  const deleteRows = () => {
+    console.log("delete button");
+    console.log(deletedRows.length);
+    setMsg(deletedRows.length + " rows deleted.");
+    setRows(
+      rows.filter(r => deletedRows.filter(sr => sr.id === r.id).length < 1)
+    );
+  };
 
   useEffect(() => {
     if (
@@ -35,15 +53,27 @@ const DataGridTable = () => {
   }, [rawData, columnNames]);
 
   return (
-    <div style={{ height: "400px", marginBottom: "50px", padding: 10 }}>
+    <div style={{ height: "400px", marginBottom: "100px", padding: 10 }}>
       {columns.length > 0 && (
         <div>
-          <div style={{ marginTop: "10px", height: "400px" }}>
+          <IconButton
+            aria-label="delete"
+            color="secondary"
+            onClick={() => deleteRows()}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <p style={{ fontWeight: "bolder" }}>{msg}</p>
+          <div />
+          <div style={{ marginTop: "30px", height: "400px" }}>
             <DataGrid
               columns={columns}
               rows={rows}
               rowsPerPageOptions={[5, 10, 25, 50, 100]}
               pageSize={5}
+              checkboxSelection
+              onRowSelected={handleRowSelection}
+              disableSelectionOnClick
             />
           </div>
         </div>
