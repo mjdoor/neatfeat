@@ -38,6 +38,8 @@ export const percentile = (arr, percentileVal) => {
   }
 };
 
+export const median = arr => percentile(arr, 50);
+
 export const countOutliers = (arr, q1, q3) => {
   const iqr = q3 - q1;
   const lowLimit = q1 - 1.5 * iqr;

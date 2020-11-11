@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { roundNum } from "../Utilities/NumberUtilities";
 
 const DataGridTable = () => {
   const [rows, setRows] = React.useState([]);
@@ -36,7 +37,8 @@ const DataGridTable = () => {
         return {
           field: colName,
           headerName: colName,
-          width: 150
+          width: 150,
+          valueFormatter: ({ value }) => roundNum(value, 3)
         };
       });
       const rawDataWithIds = rawData[0].hasOwnProperty("id")

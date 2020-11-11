@@ -13,36 +13,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import ACTIONS from "../../redux/actions";
 
-import ExampleOptions from "../Transformations/ExampleOptions";
-import ExampleTransformerWithOptions from "../../Transformers/ExampleTransformerWithOptions";
-import ExampleTransformerWithoutOptions from "../../Transformers/ExampleTransformerWithoutOptions";
+import NumericalMissingDataOptions from "../Transformations/NumericalMissingDataOptions";
+import NumericalMissingDataTransformer from "../../Transformers/NumericalMissingDataTransformer";
+import CategoricalMissingDataOptions from "../Transformations/CategoricalMissingDataOptions";
+import CategoricalMissingDataTransformer from "../../Transformers/CategoricalMissingDataTransformer";
+import ScalingTransformer from "../../Transformers/ScalingTransformer";
+import NormalizationTransformer from "../../Transformers/NormalizationTransformer";
+import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTransformation";
+import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
+import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 import DeleteColumns from "../../Transformers/DeleteColumns";
-
 import StatisticsTable from "./StatisticsTable";
-
-const allTransformers = {
-  categorical: [
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
-  ],
-  numerical: [
-    {
-      name: "Example Transformer",
-      transformFunction: ExampleTransformerWithOptions,
-      optionComponent: ExampleOptions
-    },
-    {
-      name: "Example Transformer without Options",
-      transformFunction: ExampleTransformerWithoutOptions
-    },
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
-  ]
-};
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -72,7 +53,11 @@ const StatsData = props => {
       setOptionComponentTransformer(selectedTransformer);
     } else {
       updateData(
-        selectedTransformer.transformFunction(rawData, selectedFeatures)
+        selectedTransformer.transformFunction(
+          rawData,
+          selectedFeatures,
+          statsData
+        )
       );
     }
   };
@@ -82,7 +67,8 @@ const StatsData = props => {
       optionComponentTransformer.transformFunction(
         rawData,
         selectedFeatures,
-        options
+        options,
+        statsData
       )
     );
   };
@@ -93,6 +79,53 @@ const StatsData = props => {
 
   const handleSelectionChange = selectedFeatureNames => {
     setSelectedFeatures(selectedFeatureNames);
+  };
+
+  const allTransformers = {
+    categorical: [
+      {
+        name: "Handle Missing Data",
+        transformFunction: CategoricalMissingDataTransformer,
+        optionComponent: CategoricalMissingDataOptions
+      },
+      {
+        name: "One Hot Encoding",
+        transformFunction: OneHotEncodingTransformation
+      },
+    {
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
+    ],
+    numerical: [
+      {
+        name: "Handle Missing Data",
+        transformFunction: NumericalMissingDataTransformer,
+        optionComponent: NumericalMissingDataOptions
+      },
+      {
+        name: "Scale",
+        transformFunction: ScalingTransformer
+      },
+      {
+        name: "Normalize",
+        transformFunction: NormalizationTransformer
+      },
+      {
+        name: "Mathematically Combine",
+        transformFunction: MathematicalCombinationTransformer,
+        optionComponent: props => (
+          <MathematicalCombinationOptions
+            selectedFeatures={selectedFeatures}
+            {...props}
+          />
+        )
+      },
+    {
+      name: "Delete Columns",
+      transformFunction: DeleteColumns
+    }
+    ]
   };
 
   const availableTransformers = showNumeric

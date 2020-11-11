@@ -6,7 +6,6 @@ import { roundNum } from "../../Utilities/NumberUtilities";
 import { Typography } from "@material-ui/core";
 
 const StatisticsTable = props => {
-
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
@@ -44,7 +43,7 @@ const StatisticsTable = props => {
                 return 100;
               }
             })(), // just hacky to get decent column widths quickly
-            valueFormatter: ({ value }) => roundNum(value, 2)
+            valueFormatter: ({ value }) => roundNum(value, 3)
           }))
       ];
 
