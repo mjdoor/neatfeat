@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Tooltip } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import ValueCountsTooltip from "./ValueCountsTooltip";
 
@@ -26,7 +27,19 @@ const StatisticsTable = props => {
         }))
       );
       const cols = [
-        { field: "featureName", headerName: "Feature", width: 150 },
+        {
+          field: "featureName",
+          headerName: "Feature",
+          width: 150,
+          renderCell: params =>
+            params.value.length > 15 ? (
+              <Tooltip title={params.value}>
+                <span>{`${params.value.substring(0, 15)}...`}</span>
+              </Tooltip>
+            ) : (
+              <span>{params.value}</span>
+            )
+        },
         ...Object.keys(dataToShow[0].data)
           .filter(key => key !== "Value Counts") // Value Counts will be handled separately
           .map(key => ({

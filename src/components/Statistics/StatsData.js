@@ -23,6 +23,9 @@ import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTrans
 import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
 import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 import DeleteColumns from "../../Transformers/DeleteColumns";
+import PolynomialFeaturesOptions from "../Transformations/PolynomialFeaturesOptions";
+import PolynomialFeaturesTransformer from "../../Transformers/PolynomialFeaturesTransformer";
+
 import StatisticsTable from "./StatisticsTable";
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +34,6 @@ const useStyles = makeStyles(theme => ({
     minWidth: 150
   }
 }));
-//TODO: get selected rows to delete from transformer
 
 const StatsData = props => {
   const [showNumeric, setShowNumeric] = useState(true);
@@ -92,10 +94,10 @@ const StatsData = props => {
         name: "One Hot Encoding",
         transformFunction: OneHotEncodingTransformation
       },
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
+      {
+        name: "Delete Columns",
+        transformFunction: DeleteColumns
+      }
     ],
     numerical: [
       {
@@ -121,10 +123,20 @@ const StatsData = props => {
           />
         )
       },
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
+      {
+        name: "Add Polynomial Features",
+        transformFunction: PolynomialFeaturesTransformer,
+        optionComponent: props => (
+          <PolynomialFeaturesOptions
+            selectedFeatures={selectedFeatures}
+            {...props}
+          />
+        )
+      },
+      {
+        name: "Delete Columns",
+        transformFunction: DeleteColumns
+      }
     ]
   };
 
