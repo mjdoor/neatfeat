@@ -8,6 +8,7 @@ import {
   DialogActions,
   Button,
   FormControl,
+  FormHelperText,
   InputLabel,
   Select,
   MenuItem,
@@ -15,6 +16,7 @@ import {
   Typography
 } from "@material-ui/core";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
+import { combinationWithReplacement } from "../../Utilities/NumberUtilities";
 
 const StyledTooltip = withStyles(theme => ({
   tooltip: {
@@ -84,6 +86,12 @@ const PolynomialFeaturesOptions = props => {
     props.onTransform(options);
     props.onClose();
   };
+
+  // Temporary limit so too many features can't be added and cause errors and slowdowns
+  // combinationWithReplacement calculates the number of new features that would be added
+  const hasTooManyNewFeatures =
+    combinationWithReplacement(props.selectedFeatures.length, selectedDegree) >
+    330;
   return (
     <Dialog
       open={true}
@@ -97,7 +105,11 @@ const PolynomialFeaturesOptions = props => {
         <DialogContentText>
           Select the desired degree of polynomial features to create.
         </DialogContentText>
-        <FormControl component="fieldset">
+        <FormControl
+          component="fieldset"
+          error={hasTooManyNewFeatures}
+          style={{ maxWidth: 300 }}
+        >
           <InputLabel id="polynomial-features-select-label">Degree</InputLabel>
           <Select
             labelid="polynomial-features-select-label"
@@ -111,6 +123,12 @@ const PolynomialFeaturesOptions = props => {
               </MenuItem>
             ))}
           </Select>
+          {hasTooManyNewFeatures && (
+            <FormHelperText>
+              Unable to create so many new polynomial features. Please select a
+              lower degree or fewer features.
+            </FormHelperText>
+          )}
         </FormControl>
         {selectedDegree !== "" && (
           <StyledTooltip
@@ -156,7 +174,7 @@ const PolynomialFeaturesOptions = props => {
         <Button
           onClick={handleTransform}
           color="primary"
-          disabled={selectedDegree === ""}
+          disabled={selectedDegree === "" || hasTooManyNewFeatures}
         >
           Transform
         </Button>
