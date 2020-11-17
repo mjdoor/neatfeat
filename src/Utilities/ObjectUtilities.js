@@ -1,5 +1,5 @@
 // converts values in columns that look like they should be numeric to numbers
-export const castNumericColumns = data => {
+export const castNumericColumns = (data) => {
   const featureNames = Object.keys(data[0]);
   const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
     acc[featureName] = { data: [], nonNumberValues: [] };
@@ -7,7 +7,9 @@ export const castNumericColumns = data => {
   }, {});
   const columns = data.reduce((acc, row) => {
     Object.entries(row).forEach(([featureName, value]) => {
-      value = value.trim();
+      if (typeof value == "string") {
+        value = value.trim();
+      }
       if (Number.isNaN(Number(value)) || value === "") {
         acc[featureName].nonNumberValues.push(value);
       }
@@ -25,9 +27,9 @@ export const castNumericColumns = data => {
         // see if all the nonNumberValues are strings that should amount to null
         if (
           nonNumberValues.filter(
-            nonNum =>
+            (nonNum) =>
               naList.findIndex(
-                na => na.toLowerCase() === nonNum?.toLowerCase()
+                (na) => na.toLowerCase() === nonNum?.toLowerCase()
               ) === -1
           ).length === 0
         ) {
@@ -39,14 +41,18 @@ export const castNumericColumns = data => {
     {}
   );
 
-  return data.map(row => {
+  return data.map((row) => {
     return Object.entries(row).reduce((acc, [featureName, value]) => {
       if (columnNumericality[featureName]) {
-        const numVal = value.trim() === "" ? NaN : Number(value);
-        if (Number.isNaN(numVal)) {
-          acc[featureName] = null;
+        if (typeof value == "string") {
+          const numVal = value.trim() === "" ? NaN : Number(value);
+          if (Number.isNaN(numVal)) {
+            acc[featureName] = null;
+          } else {
+            acc[featureName] = numVal;
+          }
         } else {
-          acc[featureName] = numVal;
+          acc[featureName] = value;
         }
       } else {
         acc[featureName] = value.trim() === "" ? null : value; // convert empty strings to null while we're at it

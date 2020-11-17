@@ -3,27 +3,22 @@ import { Button, Typography } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { CSVReader } from "react-papaparse";
 import TargetSelectDialog from "./TargetSelectDialog";
-import ACTIONS from "../redux/actions";
-import { useDispatch } from "react-redux";
 
 const UploadCSV = () => {
-  //Set the position of the button.. Can be deleted if we don't want the button to move
-  //const [isUploaded, setIsUploaded] = useState(false);
-
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [hasData, setHasData] = useState(false);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [uploadError, setUploadError] = useState(false);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
-  const dispatch = useDispatch();
 
-  const handleOnDrop = data => {
+  const handleOnDrop = (data) => {
     // Check if file is empty
     if (
       data[0] === undefined ||
-      data[0].data[0] === undefined ||
-      data[0].data[0] === ""
+      data[0].data === undefined ||
+      data[0].data.length === 0
     ) {
       // array empty or does not exist
       console.log("EMPTY");
@@ -35,22 +30,25 @@ const UploadCSV = () => {
       setUploadErrorMessage("");
 
       // Isolate the data
-      var arrData = data.map(d => d.data);
+      var arrData = data.map((d) => d.data);
 
       // Set the columns for the Target Column Select
       setColumns(arrData[0]);
-      //SUE -- I needed the columns too
-      dispatch(ACTIONS.updateColumnNames(arrData[0]));
+
       setOpen(true);
+
+      // reset the button to reset the styling
+      setIsUploaded(false);
+      setIsUploaded(true);
 
       // Make the data into an Array of Objects with Features as the keys
       setData(convertToArrayOfObjects(arrData));
     }
   };
 
-  const handleClose = value => {
+  const handleClose = (value, hasData, addData) => {
+    setHasData(hasData);
     setOpen(false);
-    setSelectedValue(value);
   };
 
   // Converts the array where Arr[0] is Columns and the rest are Rows into Array of Objects with Column names as the keys
@@ -77,6 +75,8 @@ const UploadCSV = () => {
   // For handling errors on CSVReader
   const handleOnError = (err, file, inputElem, reason) => {
     console.log(err);
+    setUploadError(true);
+    setUploadErrorMessage(err);
   };
 
   return (
@@ -85,15 +85,17 @@ const UploadCSV = () => {
         onDrop={handleOnDrop}
         onError={handleOnError}
         noDrag
+        accept=".csv"
+        isReset={isUploaded}
         config={{ skipEmptyLines: true }}
         style={{
           dropArea: {
             width: "10px",
             height: "10px",
             borderColor: "#fff",
-            marginTop: "3em"
+            marginTop: "3em",
           },
-          height: "1em"
+          height: "1em",
         }}
       >
         <Button
@@ -111,7 +113,9 @@ const UploadCSV = () => {
         </Typography>
       )}
       <TargetSelectDialog
-        selectedValue={selectedValue}
+        hasDataPassed={hasData}
+        onError={handleOnError}
+        isUploaded={isUploaded}
         open={open}
         onClose={handleClose}
         columns={columns}

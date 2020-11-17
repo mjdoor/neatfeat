@@ -5,7 +5,7 @@ import { castNumericColumns } from "../Utilities/ObjectUtilities";
 const intitialState = {
   rawData: [],
   targetColumnName: "",
-  columnNames: []
+  columnNames: [],
 };
 
 export default (state = intitialState, action) => {
@@ -16,12 +16,15 @@ export default (state = intitialState, action) => {
         ...state,
         rawData: castedData,
         targetColumnName: action.targetColumnName,
-        statsData: generateStatsFromRawData(castedData, action.targetColumnName)
+        statsData: generateStatsFromRawData(
+          castedData,
+          action.targetColumnName
+        ),
       };
     case ACTIONS.Types.UPDATE_COLUMNS:
       return {
         ...state,
-        columnNames: action.columns
+        columnNames: action.columns,
       };
     case ACTIONS.Types.UPDATE_TABLE:
       return {
@@ -31,7 +34,7 @@ export default (state = intitialState, action) => {
           action.updatedData,
           state.targetColumnName
         ),
-        columnNames: Object.keys(action.updatedData[0])
+        columnNames: Object.keys(action.updatedData[0]),
       };
     default:
       return state;

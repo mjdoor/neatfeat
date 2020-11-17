@@ -1,31 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
   Select,
   MenuItem,
   FormControl,
+  FormControlLabel,
   InputLabel,
   DialogContent,
-  Button
+  Button,
+  Checkbox,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ACTIONS from "../redux/actions";
 
-const TargetSelectDialog = props => {
-  var target = props.columns[props.columns.length - 1];
-  const { onClose, selectedValue, open } = props;
+const TargetSelectDialog = (props) => {
+  const {
+    onClose,
+    onError,
+    selectedValue,
+    open,
+    data,
+    columns,
+    hasDataPassed,
+  } = props;
+  const { rawData, columnNames } = useSelector((state) => state);
+  var hasData = hasDataPassed;
+  var target = columns[columns.length - 1];
   const dispatch = useDispatch();
+  const [addData, setAddData] = useState(false);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     target = event.target.value;
+  };
+
+  const handleCheckChange = (event) => {
+    setAddData(event.target.checked);
   };
 
   const handleClick = () => {
     // Store the data to the redux store
-    dispatch(ACTIONS.createTable(props.data, target));
+    if (addData) {
+      // compare columns
+      if (isColumnsEqual(columnNames, columns)) {
+        const newData = data.concat(rawData);
+        // const newColumns = columnNames.concat(columns);      For future when adding new file with different columns than original dataset
+        dispatch(ACTIONS.createTable(newData, target));
+        dispatch(ACTIONS.updateColumnNames(columns));
+      } else {
+        onError("File doesn't match original dataset.");
+      }
+    } else {
+      dispatch(ACTIONS.createTable(data, target));
+      dispatch(ACTIONS.updateColumnNames(columns));
+    }
 
-    onClose(target);
+    hasData = true;
+
+    onClose(target, hasData, addData);
+  };
+
+  const isColumnsEqual = (arrOriginal, arrNew) => {
+    var isEqual = false;
+    arrOriginal.forEach((e) => (isEqual = arrNew.includes(e) > 0));
+
+    return isEqual;
   };
 
   const handleClose = () => {
@@ -47,12 +86,25 @@ const TargetSelectDialog = props => {
             <MenuItem key="Placeholder" disabled>
               TargetColumn
             </MenuItem>
-            {props.columns.map(data => (
+            {props.columns.map((data) => (
               <MenuItem value={data} key={data}>
                 {data}
               </MenuItem>
             ))}
           </Select>
+          {hasData && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="secondary"
+                  checked={addData}
+                  onChange={handleCheckChange}
+                  name="chkAddData"
+                />
+              }
+              label="Add data to current dataset"
+            />
+          )}
         </FormControl>
       </DialogContent>
       <Button onClick={handleClick} variant="contained" color="primary">
