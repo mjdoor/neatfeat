@@ -88,10 +88,10 @@ const PolynomialFeaturesOptions = props => {
   };
 
   // Temporary limit so too many features can't be added and cause errors and slowdowns
-  // combinationWithReplacement calculates the number of new features that would be added
+  // combinationWithReplacement calculates the number of new features that would be added specifically for the selected degree
   const hasTooManyNewFeatures =
     combinationWithReplacement(props.selectedFeatures.length, selectedDegree) >
-    330;
+    2000;
   return (
     <Dialog
       open={true}

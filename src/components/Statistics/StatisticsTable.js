@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Tooltip } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import { useSelector } from "react-redux";
+
+import { Tooltip, LinearProgress } from "@material-ui/core";
+import { DataGrid, GridOverlay } from "@material-ui/data-grid";
 import ValueCountsTooltip from "./ValueCountsTooltip";
 
 import { roundNum } from "../../Utilities/NumberUtilities";
@@ -9,6 +11,8 @@ import { Typography } from "@material-ui/core";
 const StatisticsTable = props => {
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
+
+  const { areStatsCalculating } = useSelector(state => state);
 
   useEffect(() => {
     const dataToShow = props.numerical
@@ -86,6 +90,16 @@ const StatisticsTable = props => {
     <div style={{ height: "400px" }}>
       {rows.length > 0 && columns.length > 0 ? (
         <DataGrid
+          components={{
+            loadingOverlay: () => (
+              <GridOverlay>
+                <div style={{ position: "absolute", top: 0, width: "100%" }}>
+                  <LinearProgress />
+                </div>
+              </GridOverlay>
+            )
+          }}
+          loading={areStatsCalculating}
           rows={rows}
           columns={columns}
           checkboxSelection
