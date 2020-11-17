@@ -54,6 +54,8 @@ export const castNumericColumns = (data) => {
         } else {
           acc[featureName] = value;
         }
+      } else if (value == null) {
+        acc[featureName] = null;
       } else {
         acc[featureName] = value.trim() === "" ? null : value; // convert empty strings to null while we're at it
       }
