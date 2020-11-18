@@ -10,21 +10,24 @@ import {
     DialogContentText,
     Button
 } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+import { BarChart, ScatterChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    Scatter
+ } from "recharts";
 
 const ChartSelectDialog = props => {
-    const [selectedChart, setSelectedChart] = useState();
-    const { onClose, selectedValue, open, selectedFeatures } = props;
-
-    const handleClick = () => {
-        onClose(selectedChart);
-    }
-
-    const handleChange = event => {
-        setSelectedChart(event.target.value);
-    }
+    //const [selectedChart, setSelectedChart] = useState();
+    const { onClose, selectedChart, open, selectedFeatures, rawData } = props;
 
     const handleClose = () => {
-        onClose(selectedValue);
+        onClose();
     }
 
     return (        
@@ -34,7 +37,54 @@ const ChartSelectDialog = props => {
         disableBackdropClick
         disableEscapeKeyDown
         >
-            <DialogTitle>Choose the Chart type</DialogTitle>
+            <DialogTitle>
+                Chart
+                <IconButton aria-label="Close"  onClick={handleClose}>
+                 <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+            
+            <DialogContent align="center">
+                {(() => {
+                    switch(selectedChart) {
+                        case 'BarChart' : return (
+                            <BarChart
+                            width={600}
+                            height={300}
+                            data={rawData}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid  stroke="#eee" strokeDasharray="3 3"/>
+                                <XAxis dataKey="Id" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey={selectedFeatures[0]} fill="primary" />
+                            </BarChart>
+                        )
+                        case 'ScatterChart': return (
+                            <ScatterChart
+                            width={600}
+                            height={300}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid />
+                                <XAxis type="number" dataKey={selectedFeatures[0]} name={selectedFeatures[0]} />
+                                <YAxis type="number" dataKey={selectedFeatures[1]} name={selectedFeatures[1]} />
+                                <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+                                <Legend />
+                                <Scatter
+                                name="Median"
+                                data={rawData}
+                                fill="#8884d8"
+                                line
+                                shape="circle"
+                                />
+                            </ScatterChart>
+                        )
+                    }
+                })()}
+                
+            </DialogContent>
+            {/* <DialogTitle>Choose the Chart type</DialogTitle>
             <DialogContent align="center">
                 {selectedFeatures.length !== 0 ? <div>
                         <DialogContentText>Selected Features</DialogContentText>
@@ -54,7 +104,7 @@ const ChartSelectDialog = props => {
                     </Select>
                 </FormControl>
             </DialogContent>
-            <Button onClick={handleClick} variant="contained" color="primary"> OK</Button>
+            <Button onClick={handleClick} variant="contained" color="primary"> OK</Button> */}
         </Dialog>
     )
 }

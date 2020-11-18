@@ -42,8 +42,9 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  // const [chartSelectOpen, setChartSelectOpen] = useState(false);
+  const [chartSelectOpen, setChartSelectOpen] = useState(false);
   const [selectedChart, setSelectedChart] = useState("");
+  const [isChartCreated, setIsChartCreated] = useState(false);
   const { rawData, statsData } = useSelector(state => state);
   const dispatch = useDispatch();
 
@@ -71,6 +72,12 @@ const StatsData = props => {
 
   const handleChartSelect = chartType => {
     setSelectedChart(chartType);
+    setChartSelectOpen(true);
+    setIsChartCreated(true);
+  }
+
+  const showChartOpen = () => {
+    setChartSelectOpen(true);
   }
 
   const handleTransformWithOptions = options => {
@@ -145,9 +152,9 @@ const StatsData = props => {
 
   const OptionComponent = optionComponentTransformer?.optionComponent;
 
-  // const handleCreateChartButton = () => {
-  //   setChartSelectOpen(true);
-  // }
+  const handleChartDialogClose = () => {
+    setChartSelectOpen(false);
+  }
 
   return (
     <div style={{ padding: 10 }}>
@@ -177,23 +184,12 @@ const StatsData = props => {
                 Numerical
               </Typography>
             </Grid>
-            {/* <Grid item style={{ marginLeft: "auto" }}>
-              <Button
-              variant="contained"
-              color="secondary"
-              size="medium"
-              onClick={handleCreateChartButton}>Create Chart</Button>
-              <ChartSelectDialog
-              open={chartSelectOpen}
-              onClose={handleChartDialogClose}
-              chartTypes={chartTypes}
-              selectedValue={selectedValue}
-              selectedFeatures={selectedFeatures}
-              >
-              
-              </ChartSelectDialog>
-            </Grid> */}
             <Grid item style={{ marginLeft: "auto" }}>
+              {isChartCreated && (
+              <Button onClick={showChartOpen} hidden="false" size="small">Show Chart</Button>
+              )}
+            </Grid>
+            <Grid item>
             <FormControl
                 className={classes.formControl}
                 disabled={selectedFeatures.length === 0}
@@ -212,6 +208,14 @@ const StatsData = props => {
                   ))}
                 </Select>
               </FormControl>
+              <ChartSelectDialog
+              open={chartSelectOpen}
+              onClose={handleChartDialogClose}
+              chartTypes={chartTypes}
+              selectedChart={selectedChart}
+              selectedFeatures={selectedFeatures}
+              rawData={rawData}
+              ></ChartSelectDialog>
             </Grid>
             <Grid item >
               <FormControl
