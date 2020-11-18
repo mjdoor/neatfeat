@@ -8,12 +8,14 @@ const DownloadCSV = () => {
 
 return (
     <div style={{marginTop: "1rem"}}>
+        {rawData.length !== 0 && (
         <CSVLink  className="csvDownloadLink"
             data={rawData} 
             target="_blank" 
             filename={'cleaned_data.csv'} >
             Download cleaned data
         </CSVLink>
+        )}        
     </div>
     )
 }
