@@ -42,8 +42,8 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const [chartSelectOpen, setChartSelectOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  // const [chartSelectOpen, setChartSelectOpen] = useState(false);
+  const [selectedChart, setSelectedChart] = useState("");
   const { rawData, statsData } = useSelector(state => state);
   const dispatch = useDispatch();
 
@@ -68,6 +68,10 @@ const StatsData = props => {
       );
     }
   };
+
+  const handleChartSelect = chartType => {
+    setSelectedChart(chartType);
+  }
 
   const handleTransformWithOptions = options => {
     updateData(
@@ -141,14 +145,9 @@ const StatsData = props => {
 
   const OptionComponent = optionComponentTransformer?.optionComponent;
 
-  const handleCreateChartButton = () => {
-    setChartSelectOpen(true);
-  }
-
-  const handleChartDialogClose = value => {
-    setChartSelectOpen(false);
-    setSelectedValue(value);
-  }
+  // const handleCreateChartButton = () => {
+  //   setChartSelectOpen(true);
+  // }
 
   return (
     <div style={{ padding: 10 }}>
@@ -178,7 +177,7 @@ const StatsData = props => {
                 Numerical
               </Typography>
             </Grid>
-            <Grid item style={{ marginLeft: "auto" }}>
+            {/* <Grid item style={{ marginLeft: "auto" }}>
               <Button
               variant="contained"
               color="secondary"
@@ -193,8 +192,28 @@ const StatsData = props => {
               >
               
               </ChartSelectDialog>
-            </Grid>
+            </Grid> */}
             <Grid item style={{ marginLeft: "auto" }}>
+            <FormControl
+                className={classes.formControl}
+                disabled={selectedFeatures.length === 0}
+              >
+                <InputLabel>Create chart</InputLabel>
+                <Select
+                  value={""}
+                  onChange={event =>
+                    handleChartSelect(event.target.value)
+                  }
+                >
+                  {chartTypes.map((chartType, idx) => (
+                    <MenuItem key={idx} value={chartType}>
+                      {chartType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item >
               <FormControl
                 className={classes.formControl}
                 disabled={selectedFeatures.length === 0}
