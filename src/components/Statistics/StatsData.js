@@ -6,7 +6,8 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel
+  InputLabel,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,6 +25,8 @@ import MathematicalCombinationOptions from "../Transformations/MathematicalCombi
 import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 import DeleteColumns from "../../Transformers/DeleteColumns";
 import StatisticsTable from "./StatisticsTable";
+import ChartSelectDialog from "../ChartSelectDialog";
+
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -39,10 +42,14 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
+  const [chartSelectOpen, setChartSelectOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
   const { rawData, statsData } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
+  
+  const chartTypes = ["BarChart", "ScatterChart"];
 
   const handleTransformationSelect = transformerName => {
     const selectedTransformer = availableTransformers.find(
@@ -134,6 +141,15 @@ const StatsData = props => {
 
   const OptionComponent = optionComponentTransformer?.optionComponent;
 
+  const handleCreateChartButton = () => {
+    setChartSelectOpen(true);
+  }
+
+  const handleChartDialogClose = value => {
+    setChartSelectOpen(false);
+    setSelectedValue(value);
+  }
+
   return (
     <div style={{ padding: 10 }}>
       {statsData !== undefined && (
@@ -161,6 +177,22 @@ const StatsData = props => {
               >
                 Numerical
               </Typography>
+            </Grid>
+            <Grid item style={{ marginLeft: "auto" }}>
+              <Button
+              variant="contained"
+              color="secondary"
+              size="medium"
+              onClick={handleCreateChartButton}>Create Chart</Button>
+              <ChartSelectDialog
+              open={chartSelectOpen}
+              onClose={handleChartDialogClose}
+              chartTypes={chartTypes}
+              selectedValue={selectedValue}
+              selectedFeatures={selectedFeatures}
+              >
+              
+              </ChartSelectDialog>
             </Grid>
             <Grid item style={{ marginLeft: "auto" }}>
               <FormControl

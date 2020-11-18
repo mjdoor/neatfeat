@@ -24,6 +24,7 @@
     "react-papaparse": "^3.9.0",
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
+    "recharts": "^1.8.5",
     "redux": "^4.0.5"
   },
   "scripts": {
