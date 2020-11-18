@@ -24,6 +24,7 @@ import MathematicalCombinationOptions from "../Transformations/MathematicalCombi
 import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 import DeleteColumns from "../../Transformers/DeleteColumns";
 import StatisticsTable from "./StatisticsTable";
+import DownloadCSV from "../DownloadCSV";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -194,6 +195,7 @@ const StatsData = props => {
               onTransform={handleTransformWithOptions}
             />
           )}
+          <DownloadCSV />
         </Fragment>
       )}
     </div>
