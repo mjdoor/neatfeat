@@ -112,15 +112,17 @@ const UploadCSV = () => {
           {uploadErrorMessage}
         </Typography>
       )}
-      <TargetSelectDialog
-        hasDataPassed={hasData}
-        onError={handleOnError}
-        isUploaded={isUploaded}
-        open={open}
-        onClose={handleClose}
-        columns={columns}
-        data={data}
-      />
+      {open ? (
+        <TargetSelectDialog
+          hasDataPassed={hasData}
+          onError={handleOnError}
+          isUploaded={isUploaded}
+          open={open}
+          onClose={handleClose}
+          columns={columns}
+          data={data}
+        />
+      ) : null}
     </div>
   );
 };

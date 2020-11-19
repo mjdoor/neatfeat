@@ -24,17 +24,24 @@ const TargetSelectDialog = (props) => {
     columns,
     hasDataPassed,
   } = props;
-  const { rawData, columnNames } = useSelector((state) => state);
+  const { rawData, columnNames, targetColumnName } = useSelector(
+    (state) => state
+  );
   var hasData = hasDataPassed;
-  var target = columns[columns.length - 1];
-  const dispatch = useDispatch();
   const [addData, setAddData] = useState(false);
+  const [target, setTarget] = useState(columns[columns.length - 1]);
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    target = event.target.value;
+    setTarget(event.target.value);
   };
 
   const handleCheckChange = (event) => {
+    if (event.target.checked) {
+      setTarget(targetColumnName);
+    } else {
+      setTarget(columns[columns.length - 1]);
+    }
     setAddData(event.target.checked);
   };
 
@@ -56,7 +63,6 @@ const TargetSelectDialog = (props) => {
     }
 
     hasData = true;
-
     onClose(target, hasData, addData);
   };
 
@@ -81,17 +87,21 @@ const TargetSelectDialog = (props) => {
       <DialogTitle>Choose the Target Column</DialogTitle>
       <DialogContent align="center">
         <FormControl style={{ minWidth: "8em", marginBottom: "2em" }}>
-          <InputLabel>Target Column</InputLabel>
-          <Select defaultValue={target} onChange={handleChange}>
-            <MenuItem key="Placeholder" disabled>
-              TargetColumn
-            </MenuItem>
-            {props.columns.map((data) => (
-              <MenuItem value={data} key={data}>
-                {data}
-              </MenuItem>
-            ))}
-          </Select>
+          {!addData && (
+            <>
+              <InputLabel>Target Column</InputLabel>
+              <Select value={target} onChange={handleChange}>
+                <MenuItem key="Placeholder" disabled>
+                  TargetColumn
+                </MenuItem>
+                {columns.map((data) => (
+                  <MenuItem value={data} key={data}>
+                    {data}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          )}
           {hasData && (
             <FormControlLabel
               control={
