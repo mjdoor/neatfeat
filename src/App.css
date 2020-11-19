@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.csvDownloadLink {
+  float: right;
+  background-color: #9fa8da;
+  color: white;
+  border-radius: 1rem;
+  padding: 1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
