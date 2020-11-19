@@ -41,9 +41,7 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData, areStatsCalculating } = useSelector(
-    state => state
-  );
+  const { rawData, statsData } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
