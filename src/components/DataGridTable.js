@@ -15,40 +15,21 @@ const DataGridTable = () => {
   const [btnSwitch, setBtnSwitch] = React.useState(true);
   const dispatch = useDispatch();
 
-  const updateData = (transformedData) => {
-    dispatch(ACTIONS.updateTable(transformedData));
-  };
-
   const handleRowSelection = (e) => {
-    console.log("row selected");
+    setMsg("");
     setDeletedRows([...deletedRows, ...rows.filter((r) => r.id === e.data.id)]);
     setBtnSwitch(false);
   };
 
   const deleteRows = () => {
-    //console.log("delete button");
-    console.log(deletedRows.length);
-    setMsg(deletedRows.length + " rows deleted.");
-    setRows(
-      rows.filter((r) => deletedRows.filter((sr) => sr.id === r.id).length < 1)
-    );
-    setDeletedRows([]);
-    setBtnSwitch(true);
-    var deleted = [];
-
-    deletedRows.forEach((item) => {
-      console.log("ID: " + item.id);
-      rawData.map((r) => {
-        if (item.id + 1 === r.Id) delete r[item.id + 1];
-      });
-
-      // deleted = rawData.filter((rd) => rd.Id === item.id + 1);
-
-      // delete rawData[item.id + 1];
+    setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
+    deletedRows.forEach((selected) => {
+      rawData.splice(selected.id, 1);
     });
-
-    // updateData(rawData);
-    console.log("RAW DATA: " + rawData.length);
+    dispatch(ACTIONS.updateTable(rawData));
+    setDeletedRows([]);
+    setMsg(deletedRows.length + " rows deleted.");
+    setBtnSwitch(true);
   };
 
   useEffect(() => {
@@ -69,9 +50,9 @@ const DataGridTable = () => {
       const rawDataWithIds = rawData[0].hasOwnProperty("id")
         ? rawData
         : rawData.map((row, idx) => {
+            //     console.log("RAW DATA  BEFORE: " + row.Id);
             return { id: idx, ...row };
           });
-      console.log("RAW DATA  BEFORE: " + rawData.length);
       setColumns(columnOutputData);
       setRows(rawDataWithIds);
     }
