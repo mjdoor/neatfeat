@@ -6,7 +6,8 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel
+  InputLabel,
+  CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -41,7 +42,7 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData } = useSelector(state => state);
+  const { rawData, statsData, isTransforming } = useSelector(state => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -64,15 +65,19 @@ const StatsData = props => {
     }
   };
 
-  const handleTransformWithOptions = options => {
+  // added async/await here for PolynomialFeaturesTransformer, since its performance was much better when async.
+  /// But this code still works for non-async transformers as well.
+  const handleTransformWithOptions = async options => {
+    dispatch(ACTIONS.applyTransformation(true));
     updateData(
-      optionComponentTransformer.transformFunction(
+      await optionComponentTransformer.transformFunction(
         rawData,
         selectedFeatures,
         options,
         statsData
       )
     );
+    dispatch(ACTIONS.applyTransformation(false));
   };
 
   const updateData = transformedData => {
@@ -174,6 +179,16 @@ const StatsData = props => {
                 Numerical
               </Typography>
             </Grid>
+            {isTransforming && (
+              <Fragment>
+                <Grid item style={{ marginLeft: 100 }}>
+                  <CircularProgress />
+                </Grid>
+                <Grid item>
+                  <Typography>Applying transformation...</Typography>
+                </Grid>
+              </Fragment>
+            )}
             <Grid item style={{ marginLeft: "auto" }}>
               <FormControl
                 className={classes.formControl}

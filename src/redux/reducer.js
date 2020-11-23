@@ -4,7 +4,8 @@ const intitialState = {
   rawData: [],
   targetColumnName: "",
   columnNames: [],
-  areStatsCalculating: false
+  areStatsCalculating: false,
+  isTransforming: false
 };
 
 export default (state = intitialState, action) => {
@@ -33,6 +34,11 @@ export default (state = intitialState, action) => {
         ...state,
         statsData: action.statsData,
         areStatsCalculating: false
+      };
+    case ACTIONS.Types.APPLY_TRANSFORMATION:
+      return {
+        ...state,
+        isTransforming: action.isTransforming
       };
     default:
       return state;

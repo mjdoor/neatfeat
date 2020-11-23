@@ -1,4 +1,8 @@
-const PolynomialFeaturesTransformer = (data, selectedColumns, options) => {
+const PolynomialFeaturesTransformer = async (
+  data,
+  selectedColumns,
+  options
+) => {
   // We need to add polynomial features for all degrees from 2 up to the selected degree
   const degreesToProcess = options.availableDegrees.filter(
     d => d <= options.degree
@@ -19,22 +23,29 @@ const PolynomialFeaturesTransformer = (data, selectedColumns, options) => {
     ];
   });
 
-  data.forEach(row => {
-    polynomialCombinationFeatureIndices.forEach(indices => {
-      const featureName = indices
-        .map(index => selectedColumns[index])
-        .join("*");
-      const featureValue = indices.reduce((runningProduct, index) => {
-        const val = row[selectedColumns[index]];
-        return val === null || runningProduct === null
-          ? null
-          : runningProduct * val;
-      }, 1);
-      row[featureName] = featureValue;
-    });
-  });
+  const updatedData = await Promise.all(
+    data.map(async row => {
+      return await new Promise(resolve => {
+        setTimeout(() => {
+          polynomialCombinationFeatureIndices.forEach(indices => {
+            const featureName = indices
+              .map(index => selectedColumns[index])
+              .join("*");
+            const featureValue = indices.reduce((runningProduct, index) => {
+              const val = row[selectedColumns[index]];
+              return val === null || runningProduct === null
+                ? null
+                : runningProduct * val;
+            }, 1);
+            row[featureName] = featureValue;
+          });
+          resolve(row);
+        }, 0);
+      });
+    })
+  );
 
-  return [...data];
+  return updatedData;
 };
 
 /**

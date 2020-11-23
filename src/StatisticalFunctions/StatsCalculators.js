@@ -22,35 +22,41 @@ export class NumericStatsCalculator {
     }
   }
 
-  buildStatsReport() {
+  async buildStatsReport() {
     if (this.valueArr.length !== this.targetArr.length) {
       console.log("Data and target arrays have different lengths");
       return undefined;
     }
 
-    const report = {
-      Count: this.valueArr.length,
-      "# Missing": this.numMissing
-    };
+    const report = await new Promise(resolve => {
+      setTimeout(() => {
+        const report = {
+          Count: this.valueArr.length,
+          "# Missing": this.numMissing
+        };
 
-    report["Mean"] = mean(this.valueArr);
-    report["Standard Deviation"] = std(this.valueArr, report["Mean"]);
-    report["Min"] = min(this.valueArr);
-    report["Max"] = max(this.valueArr);
-    report["1st Quartile"] = percentile(this.valueArr, 25);
-    report["Median"] = percentile(this.valueArr, 50);
-    report["3rd Quartile"] = percentile(this.valueArr, 75);
-    report["# Outliers"] = countOutliers(
-      this.valueArr,
-      report["1st Quartile"],
-      report["3rd Quartile"]
-    );
-    report["Pearson Correlation Coefficient"] = pearsonCorr(
-      this.valueArr,
-      this.targetArr,
-      report["Mean"],
-      mean(this.targetArr)
-    );
+        report["Mean"] = mean(this.valueArr);
+        report["Standard Deviation"] = std(this.valueArr, report["Mean"]);
+        report["Min"] = min(this.valueArr);
+        report["Max"] = max(this.valueArr);
+        report["1st Quartile"] = percentile(this.valueArr, 25);
+        report["Median"] = percentile(this.valueArr, 50);
+        report["3rd Quartile"] = percentile(this.valueArr, 75);
+        report["# Outliers"] = countOutliers(
+          this.valueArr,
+          report["1st Quartile"],
+          report["3rd Quartile"]
+        );
+        report["Pearson Correlation Coefficient"] = pearsonCorr(
+          this.valueArr,
+          this.targetArr,
+          report["Mean"],
+          mean(this.targetArr)
+        );
+
+        resolve(report);
+      }, 0);
+    });
 
     return report;
   }
@@ -63,14 +69,22 @@ export class CategoricalStatsCalculator {
     this.numMissing = arr.length - this.valueArr.length;
   }
 
-  buildStatsReport() {
-    const report = {
-      Count: this.valueArr.length,
-      "# Missing": this.numMissing
-    };
+  async buildStatsReport() {
+    const report = await new Promise(resolve => {
+      setTimeout(() => {
+        const report = {
+          Count: this.valueArr.length,
+          "# Missing": this.numMissing
+        };
 
-    report["Value Counts"] = valueCounts(this.valueArr);
-    report["Number of Categories"] = Object.keys(report["Value Counts"]).length;
+        report["Value Counts"] = valueCounts(this.valueArr);
+        report["Number of Categories"] = Object.keys(
+          report["Value Counts"]
+        ).length;
+
+        resolve(report);
+      }, 0);
+    });
 
     return report;
   }
