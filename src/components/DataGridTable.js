@@ -17,7 +17,16 @@ const DataGridTable = () => {
 
   const handleRowSelection = (e) => {
     setMsg("");
-    setDeletedRows([...deletedRows, ...rows.filter((r) => r.id === e.data.id)]);
+    if (e.isSelected === true) {
+      console.log("select: " + e.data.id);
+      setDeletedRows([
+        ...deletedRows,
+        ...rows.filter((r) => r.id === e.data.id),
+      ]);
+    } else if (e.isSelected === false) {
+      console.log("unselect: " + e.data.id);
+      delete deletedRows[e.data.id];
+    }
     setBtnSwitch(false);
   };
 
@@ -25,6 +34,7 @@ const DataGridTable = () => {
     setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
     deletedRows.forEach((selected) => {
       rawData.splice(selected.id, 1);
+      console.log("row: " + selected.id);
     });
     dispatch(ACTIONS.updateTable(rawData));
     setDeletedRows([]);
