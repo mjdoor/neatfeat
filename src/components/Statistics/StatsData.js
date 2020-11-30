@@ -7,12 +7,14 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  CircularProgress,
+  CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useSelector, useDispatch } from "react-redux";
 import ACTIONS from "../../redux/actions";
+
+import { deepCopy } from "../../Utilities/ObjectUtilities";
 
 import NumericalMissingDataOptions from "../Transformations/NumericalMissingDataOptions";
 import NumericalMissingDataTransformer from "../../Transformers/NumericalMissingDataTransformer";
@@ -29,27 +31,29 @@ import PolynomialFeaturesTransformer from "../../Transformers/PolynomialFeatures
 
 import StatisticsTable from "./StatisticsTable";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 150,
-  },
+    minWidth: 150
+  }
 }));
 
-const StatsData = (props) => {
+const StatsData = props => {
   const [showNumeric, setShowNumeric] = useState(true);
   const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData, isTransforming } = useSelector((state) => state);
+  const { rawData, statsData, isTransforming } = useSelector(
+    state => state.present
+  );
   const dispatch = useDispatch();
 
   const classes = useStyles();
 
-  const handleTransformationSelect = (transformerName) => {
+  const handleTransformationSelect = transformerName => {
     const selectedTransformer = availableTransformers.find(
-      (t) => t.name === transformerName
+      t => t.name === transformerName
     );
 
     if (selectedTransformer.hasOwnProperty("optionComponent")) {
@@ -57,7 +61,7 @@ const StatsData = (props) => {
     } else {
       updateData(
         selectedTransformer.transformFunction(
-          rawData,
+          deepCopy(rawData), // need to copy the data in case to ensure the present state for each row isn't changed directly, which will mess up undo/redo functionality
           selectedFeatures,
           statsData
         )
@@ -67,11 +71,11 @@ const StatsData = (props) => {
 
   // added async/await here for PolynomialFeaturesTransformer, since its performance was much better when async.
   /// But this code still works for non-async transformers as well.
-  const handleTransformWithOptions = async (options) => {
+  const handleTransformWithOptions = async options => {
     dispatch(ACTIONS.applyTransformation(true));
     updateData(
       await optionComponentTransformer.transformFunction(
-        rawData,
+        deepCopy(rawData), // need to copy the data in case to ensure the present state for each row isn't changed directly, which will mess up undo/redo functionality
         selectedFeatures,
         options,
         statsData
@@ -80,11 +84,11 @@ const StatsData = (props) => {
     dispatch(ACTIONS.applyTransformation(false));
   };
 
-  const updateData = (transformedData) => {
+  const updateData = transformedData => {
     dispatch(ACTIONS.updateTable(transformedData));
   };
 
-  const handleSelectionChange = (selectedFeatureNames) => {
+  const handleSelectionChange = selectedFeatureNames => {
     setSelectedFeatures(selectedFeatureNames);
   };
 
@@ -93,60 +97,56 @@ const StatsData = (props) => {
       {
         name: "Handle Missing Data",
         transformFunction: CategoricalMissingDataTransformer,
-        optionComponent: CategoricalMissingDataOptions,
+        optionComponent: CategoricalMissingDataOptions
       },
       {
         name: "One Hot Encoding",
-        transformFunction: OneHotEncodingTransformation,
+        transformFunction: OneHotEncodingTransformation
       },
       {
         name: "Delete Columns",
-        transformFunction: DeleteColumns,
-      },
-      {
-        name: "Delete Columns",
-        transformFunction: DeleteColumns,
-      },
+        transformFunction: DeleteColumns
+      }
     ],
     numerical: [
       {
         name: "Handle Missing Data",
         transformFunction: NumericalMissingDataTransformer,
-        optionComponent: NumericalMissingDataOptions,
+        optionComponent: NumericalMissingDataOptions
       },
       {
         name: "Scale",
-        transformFunction: ScalingTransformer,
+        transformFunction: ScalingTransformer
       },
       {
         name: "Normalize",
-        transformFunction: NormalizationTransformer,
+        transformFunction: NormalizationTransformer
       },
       {
         name: "Mathematically Combine",
         transformFunction: MathematicalCombinationTransformer,
-        optionComponent: (props) => (
+        optionComponent: props => (
           <MathematicalCombinationOptions
             selectedFeatures={selectedFeatures}
             {...props}
           />
-        ),
+        )
       },
       {
         name: "Add Polynomial Features",
         transformFunction: PolynomialFeaturesTransformer,
-        optionComponent: (props) => (
+        optionComponent: props => (
           <PolynomialFeaturesOptions
             selectedFeatures={selectedFeatures}
             {...props}
           />
-        ),
+        )
       },
       {
         name: "Delete Columns",
-        transformFunction: DeleteColumns,
-      },
-    ],
+        transformFunction: DeleteColumns
+      }
+    ]
   };
 
   const availableTransformers = showNumeric
@@ -171,7 +171,7 @@ const StatsData = (props) => {
             <Grid item>
               <Switch
                 checked={showNumeric}
-                onChange={() => setShowNumeric((orig) => !orig)}
+                onChange={() => setShowNumeric(orig => !orig)}
                 name="datatypeSwitch"
               />
             </Grid>
@@ -201,7 +201,7 @@ const StatsData = (props) => {
                 <InputLabel>Transformations</InputLabel>
                 <Select
                   value={""}
-                  onChange={(event) =>
+                  onChange={event =>
                     handleTransformationSelect(event.target.value)
                   }
                 >

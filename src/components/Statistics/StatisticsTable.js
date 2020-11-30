@@ -12,7 +12,7 @@ const StatisticsTable = props => {
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
-  const { areStatsCalculating } = useSelector(state => state);
+  const { areStatsCalculating } = useSelector(state => state.present);
 
   useEffect(() => {
     const dataToShow = props.numerical

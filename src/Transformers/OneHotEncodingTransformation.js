@@ -27,7 +27,7 @@ const OneHotEncodingTransformation = (data, selectedColumns) => {
     });
   });
 
-  return [...data]; // duplicating array here so redux will properly update the state since it will see this as a new variable.
+  return data;
 };
 
 function makeOneHot(valueName, valueArr) {

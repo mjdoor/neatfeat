@@ -1,5 +1,5 @@
 // converts values in columns that look like they should be numeric to numbers
-export const castNumericColumns = (data) => {
+export const castNumericColumns = data => {
   const featureNames = Object.keys(data[0]);
   const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
     acc[featureName] = { data: [], nonNumberValues: [] };
@@ -27,9 +27,9 @@ export const castNumericColumns = (data) => {
         // see if all the nonNumberValues are strings that should amount to null
         if (
           nonNumberValues.filter(
-            (nonNum) =>
+            nonNum =>
               naList.findIndex(
-                (na) => na.toLowerCase() === nonNum?.toLowerCase()
+                na => na.toLowerCase() === nonNum?.toLowerCase()
               ) === -1
           ).length === 0
         ) {
@@ -41,7 +41,7 @@ export const castNumericColumns = (data) => {
     {}
   );
 
-  return data.map((row) => {
+  return data.map(row => {
     return Object.entries(row).reduce((acc, [featureName, value]) => {
       if (columnNumericality[featureName]) {
         if (typeof value == "string") {
@@ -62,4 +62,19 @@ export const castNumericColumns = (data) => {
       return acc;
     }, {});
   });
+};
+
+/**
+ * Performs a copy of an object, or an array of objects.
+ *
+ * @param {Any}    x                 The objects or array of objects to copy *
+ * @returns {Any}                    A copy of the passed in variable.
+ */
+export const deepCopy = x => {
+  if (Array.isArray(x)) {
+    // assume if first element is object, then all are objects
+    return x.map(row => (typeof row === "object" ? { ...row } : row));
+  } else if (typeof x === "object") {
+    return { ...x };
+  } else return x;
 };

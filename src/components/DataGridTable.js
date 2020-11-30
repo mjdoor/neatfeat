@@ -20,7 +20,7 @@ let fadingTimeout = null;
 const DataGridTable = () => {
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
-  const { rawData, columnNames } = useSelector(state => state);
+  const { rawData, columnNames } = useSelector(state => state.present);
   const [deletedRows, setDeletedRows] = useState([]);
   const [msg, setMsg] = useState("");
   const [hideMsg, setHideMsg] = useState(false);

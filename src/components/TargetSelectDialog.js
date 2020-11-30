@@ -9,12 +9,12 @@ import {
   InputLabel,
   DialogContent,
   Button,
-  Checkbox,
+  Checkbox
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import ACTIONS from "../redux/actions";
 
-const TargetSelectDialog = (props) => {
+const TargetSelectDialog = props => {
   const {
     onClose,
     onError,
@@ -22,21 +22,21 @@ const TargetSelectDialog = (props) => {
     open,
     data,
     columns,
-    hasDataPassed,
+    hasDataPassed
   } = props;
   const { rawData, columnNames, targetColumnName } = useSelector(
-    (state) => state
+    state => state.present
   );
   var hasData = hasDataPassed;
   const [addData, setAddData] = useState(false);
   const [target, setTarget] = useState(columns[columns.length - 1]);
   const dispatch = useDispatch();
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setTarget(event.target.value);
   };
 
-  const handleCheckChange = (event) => {
+  const handleCheckChange = event => {
     if (event.target.checked) {
       setTarget(targetColumnName);
     } else {
@@ -53,13 +53,11 @@ const TargetSelectDialog = (props) => {
         const newData = data.concat(rawData);
         // const newColumns = columnNames.concat(columns);      For future when adding new file with different columns than original dataset
         dispatch(ACTIONS.createTable(newData, target));
-        dispatch(ACTIONS.updateColumnNames(columns));
       } else {
         onError("File doesn't match original dataset.");
       }
     } else {
       dispatch(ACTIONS.createTable(data, target));
-      dispatch(ACTIONS.updateColumnNames(columns));
     }
 
     hasData = true;
@@ -68,7 +66,7 @@ const TargetSelectDialog = (props) => {
 
   const isColumnsEqual = (arrOriginal, arrNew) => {
     var isEqual = false;
-    arrOriginal.forEach((e) => (isEqual = arrNew.includes(e) > 0));
+    arrOriginal.forEach(e => (isEqual = arrNew.includes(e) > 0));
 
     return isEqual;
   };
@@ -94,7 +92,7 @@ const TargetSelectDialog = (props) => {
                 <MenuItem key="Placeholder" disabled>
                   TargetColumn
                 </MenuItem>
-                {columns.map((data) => (
+                {columns.map(data => (
                   <MenuItem value={data} key={data}>
                     {data}
                   </MenuItem>

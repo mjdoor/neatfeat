@@ -4,7 +4,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import UploadCSV from "./UploadCSV";
 
+import { useDispatch } from "react-redux";
+import { ActionCreators } from "redux-undo";
+
 const AppToolBar = () => {
+  const dispatch = useDispatch();
   return (
     <div style={{ padding: 10 }}>
       <AppBar>
@@ -13,6 +17,8 @@ const AppToolBar = () => {
             Neat Feat
           </Typography>
         </Toolbar>
+        <button onClick={() => dispatch(ActionCreators.undo())}>Undo</button>
+        <button onClick={() => dispatch(ActionCreators.redo())}>Redo</button>
       </AppBar>
       <UploadCSV />
     </div>

@@ -36,7 +36,7 @@ const MathematicalCombinationOptions = props => {
   const [formulaError, setFormulaError] = useState(null);
   const [formulaBoxSelected, setFormulaBoxSelected] = useState(false);
   const [formulaExample, setFormulaExample] = useState("");
-  const existingColumnNames = useSelector(state => state.columnNames);
+  const existingColumnNames = useSelector(state => state.present.columnNames);
 
   // useEffect used just to provide different random formula examples
   useEffect(() => {

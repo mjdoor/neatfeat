@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { CSVLink } from "react-csv";
 
 const DownloadCSV = () => {
-  const { rawData } = useSelector((state) => state);
+  const { rawData } = useSelector(state => state.present);
 
   return (
     <div style={{ marginTop: "1rem" }}>
