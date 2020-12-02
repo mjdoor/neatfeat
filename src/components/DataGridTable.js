@@ -31,12 +31,23 @@ const DataGridTable = () => {
   };
 
   const deleteRows = () => {
-    setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
-    deletedRows.forEach((selected) => {
-      rawData.splice(selected.id, 1);
-      console.log("row: " + selected.id);
-    });
-    dispatch(ACTIONS.updateTable(rawData));
+    if (rawData[0].hasOwnProperty("id")) {
+      let dataFiltered = rawData;
+      deletedRows.sort();
+      setDeletedRows(deletedRows.reverse());
+      deletedRows.forEach((selected) => {
+        // alert(selected.id);
+        dataFiltered = dataFiltered.filter((r) => r.id !== selected.id);
+      });
+      dispatch(ACTIONS.updateTable(dataFiltered));
+    } else {
+      setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
+      deletedRows.forEach((selected) => {
+        rawData.splice(selected.id, 1);
+        dispatch(ACTIONS.updateTable(rawData));
+      });
+    }
+
     setDeletedRows([]);
     setMsg(deletedRows.length + " rows deleted.");
     setBtnSwitch(true);
