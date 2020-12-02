@@ -37,7 +37,7 @@ import {
       ]
     }
   */
-const generateStatsFromRawData = (rawData, targetColumnName) => {
+const generateStatsFromRawData = async (rawData, targetColumnName) => {
   const featureNames = Object.keys(rawData[0]);
   const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
     acc[featureName] = { data: [], type: "unknown" };
@@ -70,18 +70,21 @@ const generateStatsFromRawData = (rawData, targetColumnName) => {
     }
   });
 
-  const numericStatsData = Object.entries(numeric_columns).map(
-    ([featureName, values]) => ({
+  const numericStatsData = await Promise.all(
+    Object.entries(numeric_columns).map(async ([featureName, values]) => ({
       name: featureName,
-      data: new NumericStatsCalculator(values, targetColumn).buildStatsReport()
-    })
+      data: await new NumericStatsCalculator(
+        values,
+        targetColumn
+      ).buildStatsReport()
+    }))
   );
 
-  const categoricalStatsData = Object.entries(categorical_columns).map(
-    ([featureName, values]) => ({
+  const categoricalStatsData = await Promise.all(
+    Object.entries(categorical_columns).map(async ([featureName, values]) => ({
       name: featureName,
-      data: new CategoricalStatsCalculator(values).buildStatsReport()
-    })
+      data: await new CategoricalStatsCalculator(values).buildStatsReport()
+    }))
   );
 
   return { numerical: numericStatsData, categorical: categoricalStatsData };

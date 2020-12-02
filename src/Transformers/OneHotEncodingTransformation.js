@@ -1,29 +1,26 @@
 const OneHotEncodingTransformation = (data, selectedColumns) => {
   var featureArr = [];
 
-  selectedColumns.forEach((columnName) => {
+  selectedColumns.forEach(columnName => {
     var arr = [];
-    data.forEach((row) => {
-      if (!arr.find((column) => row[columnName] === column)) {
+    data.forEach(row => {
+      if (!arr.some(column => row[columnName] === column)) {
         arr.push(row[columnName]);
       }
     });
     featureArr.push({ column: columnName, values: arr });
   });
 
-  featureArr.forEach((valueArr) => {
+  featureArr.forEach(valueArr => {
     const column = valueArr.column;
-    valueArr.values.forEach((valueName) => {
+    valueArr.values.forEach(valueName => {
       data
-        .filter((r) => r[column] === valueName)
-        .forEach((row) => {
+        .filter(r => r[column] === valueName)
+        .forEach(row => {
           const oneHot = makeOneHot(valueName, valueArr);
 
           for (var i = 0; i < oneHot.length; i++) {
-            row[column + "_" + valueArr.values[i]] = makeOneHot(
-              valueName,
-              valueArr
-            )[i];
+            row[column + "_" + valueArr.values[i]] = parseInt(oneHot[i]);
           }
           delete row[column];
         });

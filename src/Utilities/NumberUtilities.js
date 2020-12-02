@@ -1,3 +1,5 @@
+import { factorial } from "mathjs";
+
 export const roundNum = (num, places) => {
   if (isNaN(Number(num))) {
     return num;
@@ -15,4 +17,8 @@ export const roundNum = (num, places) => {
   }
   const multiplier = Math.pow(10, places);
   return Math.round((num + Number.EPSILON) * multiplier) / multiplier;
+};
+
+export const combinationWithReplacement = (n, r) => {
+  return factorial(n + r - 1) / (factorial(r) * factorial(n - 1));
 };
