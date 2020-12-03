@@ -1,56 +1,74 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { roundNum } from "../Utilities/NumberUtilities";
 import ACTIONS from "../redux/actions";
+import { Grid } from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  fadingOut: {
+    opacity: 0,
+    transition: "all 250ms linear"
+  }
+}));
+
+let fadingTimeout = null;
 
 const DataGridTable = () => {
-  const [rows, setRows] = React.useState([]);
-  const [columns, setColumns] = React.useState([]);
-  const { rawData, columnNames } = useSelector((state) => state);
-  const [deletedRows, setDeletedRows] = React.useState([]);
-  const [msg, setMsg] = React.useState("");
-  const [btnSwitch, setBtnSwitch] = React.useState(true);
+  const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const { rawData, columnNames } = useSelector(state => state);
+  const [deletedRows, setDeletedRows] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [hideMsg, setHideMsg] = useState(false);
   const dispatch = useDispatch();
 
-  const handleRowSelection = (e) => {
+  const classes = useStyles();
+
+  const handleRowSelection = e => {
     setMsg("");
+    setHideMsg(false);
     if (e.isSelected === true) {
-      console.log("select: " + e.data.id);
-      setDeletedRows([
-        ...deletedRows,
-        ...rows.filter((r) => r.id === e.data.id),
+      setDeletedRows(prevDeletedRows => [
+        ...prevDeletedRows,
+        rows.find(r => r.id === e.data.id)
       ]);
     } else if (e.isSelected === false) {
-      console.log("unselect: " + e.data.id);
-      delete deletedRows[e.data.id];
+      setDeletedRows(prevDeletedRows =>
+        prevDeletedRows.filter(r => r.id !== e.data.id)
+      );
     }
-    setBtnSwitch(false);
   };
 
   const deleteRows = () => {
     if (rawData[0].hasOwnProperty("id")) {
       let dataFiltered = rawData;
-      deletedRows.sort();
-      setDeletedRows(deletedRows.reverse());
-      deletedRows.forEach((selected) => {
-        // alert(selected.id);
-        dataFiltered = dataFiltered.filter((r) => r.id !== selected.id);
+      deletedRows.forEach(selected => {
+        dataFiltered = dataFiltered.filter(r => r.id !== selected.id);
       });
       dispatch(ACTIONS.updateTable(dataFiltered));
     } else {
       setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
-      deletedRows.forEach((selected) => {
+      deletedRows.forEach(selected => {
         rawData.splice(selected.id, 1);
         dispatch(ACTIONS.updateTable(rawData));
       });
     }
 
     setDeletedRows([]);
-    setMsg(deletedRows.length + " rows deleted.");
-    setBtnSwitch(true);
+
+    if (fadingTimeout !== null) {
+      clearTimeout(fadingTimeout);
+    }
+    setMsg(
+      `${deletedRows.length} row${deletedRows.length === 1 ? "" : "s"} deleted.`
+    );
+    fadingTimeout = setTimeout(() => {
+      setHideMsg(true);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -60,18 +78,17 @@ const DataGridTable = () => {
       columnNames !== undefined &&
       columnNames.length > 0
     ) {
-      const columnOutputData = columnNames.map((colName) => {
+      const columnOutputData = columnNames.map(colName => {
         return {
           field: colName,
           headerName: colName,
           width: 150,
-          valueFormatter: ({ value }) => roundNum(value, 3),
+          valueFormatter: ({ value }) => roundNum(value, 3)
         };
       });
       const rawDataWithIds = rawData[0].hasOwnProperty("id")
         ? rawData
         : rawData.map((row, idx) => {
-            //     console.log("RAW DATA  BEFORE: " + row.Id);
             return { id: idx, ...row };
           });
       setColumns(columnOutputData);
@@ -83,17 +100,28 @@ const DataGridTable = () => {
     <div style={{ height: "400px", marginBottom: "100px", padding: 10 }}>
       {columns.length > 0 && (
         <div>
-          <IconButton
-            aria-label="delete"
-            color="secondary"
-            onClick={() => deleteRows()}
-            disabled={btnSwitch}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <p style={{ fontWeight: "bolder" }}>{msg}</p>
-
-          <div />
+          <Grid component="div" container alignItems="flex-end">
+            <IconButton
+              aria-label="delete"
+              color="secondary"
+              onClick={() => deleteRows()}
+              disabled={deletedRows.length === 0}
+            >
+              <DeleteIcon />
+            </IconButton>
+            <p
+              style={{
+                fontWeight: "bolder",
+                display: "inline",
+                paddingLeft: 10,
+                paddingBottom: 13.5,
+                margin: 0
+              }}
+              className={hideMsg ? classes.fadingOut : ""}
+            >
+              {msg}
+            </p>
+          </Grid>
           <div style={{ marginTop: "30px", height: "400px" }}>
             <DataGrid
               columns={columns}
