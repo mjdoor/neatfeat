@@ -104,7 +104,7 @@ const StatsData = props => {
         transformFunction: OneHotEncodingTransformation
       },
       {
-        name: "Delete Columns",
+        name: `Delete Column${selectedFeatures.length === 1 ? "" : "s"}`,
         transformFunction: DeleteColumns
       }
     ],
@@ -143,7 +143,7 @@ const StatsData = props => {
         )
       },
       {
-        name: "Delete Columns",
+        name: `Delete Column${selectedFeatures.length === 1 ? "" : "s"}`,
         transformFunction: DeleteColumns
       }
     ]
@@ -159,29 +159,33 @@ const StatsData = props => {
     <div style={{ padding: 10 }}>
       {statsData !== undefined && (
         <Fragment>
-          <Grid component="div" container alignItems="center">
+          <Grid container alignItems="flex-end">
             <Grid item>
-              <Typography
-                component="p"
-                style={{ fontWeight: showNumeric ? "normal" : "bold" }}
-              >
-                Categorical
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Switch
-                checked={showNumeric}
-                onChange={() => setShowNumeric(orig => !orig)}
-                name="datatypeSwitch"
-              />
-            </Grid>
-            <Grid item>
-              <Typography
-                component="p"
-                style={{ fontWeight: showNumeric ? "bold" : "normal" }}
-              >
-                Numerical
-              </Typography>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Typography
+                    component="p"
+                    style={{ fontWeight: showNumeric ? "normal" : "bold" }}
+                  >
+                    Categorical
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Switch
+                    checked={showNumeric}
+                    onChange={() => setShowNumeric(orig => !orig)}
+                    name="datatypeSwitch"
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography
+                    component="p"
+                    style={{ fontWeight: showNumeric ? "bold" : "normal" }}
+                  >
+                    Numerical
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
             {isTransforming && (
               <Fragment>

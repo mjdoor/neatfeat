@@ -13,7 +13,7 @@ const UploadCSV = () => {
   const [uploadError, setUploadError] = useState(false);
   const [uploadErrorMessage, setUploadErrorMessage] = useState("");
 
-  const handleOnDrop = (data) => {
+  const handleOnDrop = data => {
     // Check if file is empty
     if (
       data[0] === undefined ||
@@ -30,7 +30,7 @@ const UploadCSV = () => {
       setUploadErrorMessage("");
 
       // Isolate the data
-      var arrData = data.map((d) => d.data);
+      var arrData = data.map(d => d.data);
 
       // Set the columns for the Target Column Select
       setColumns(arrData[0]);
@@ -80,7 +80,7 @@ const UploadCSV = () => {
   };
 
   return (
-    <div style={{ marginBottom: "1em", padding: "1em" }} align="center">
+    <div align="center">
       <CSVReader
         onDrop={handleOnDrop}
         onError={handleOnError}
@@ -90,12 +90,10 @@ const UploadCSV = () => {
         config={{ skipEmptyLines: true }}
         style={{
           dropArea: {
-            width: "10px",
+            width: "60px",
             height: "10px",
-            borderColor: "#fff",
-            marginTop: "3em",
-          },
-          height: "1em",
+            borderColor: "rgba(0, 0, 0, 0)"
+          }
         }}
       >
         <Button

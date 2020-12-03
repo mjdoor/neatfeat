@@ -32,30 +32,29 @@ const DataGridTable = () => {
     setMsg("");
     setHideMsg(false);
     if (e.isSelected === true) {
-      setDeletedRows(prevDeletedRows => [
-        ...prevDeletedRows,
-        rows.find(r => r.id === e.data.id)
-      ]);
+      setDeletedRows(prevDeletedRows => [...prevDeletedRows, e.data.id]);
     } else if (e.isSelected === false) {
       setDeletedRows(prevDeletedRows =>
-        prevDeletedRows.filter(r => r.id !== e.data.id)
+        prevDeletedRows.filter(rId => rId !== e.data.id)
       );
     }
   };
 
   const deleteRows = () => {
     if (rawData[0].hasOwnProperty("id")) {
-      let dataFiltered = rawData;
-      deletedRows.forEach(selected => {
-        dataFiltered = dataFiltered.filter(r => r.id !== selected.id);
-      });
-      dispatch(ACTIONS.updateTable(dataFiltered));
+      // in this case, the ids for the deleted rows will be values corresponding wit the id key in each row of rawData, so just filter them out
+      dispatch(
+        ACTIONS.updateTable(
+          rawData.filter(row => !deletedRows.includes(row.id))
+        )
+      );
     } else {
-      setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
-      deletedRows.forEach(selected => {
-        rawData.splice(selected.id, 1);
-        dispatch(ACTIONS.updateTable(rawData));
-      });
+      // in this case, the id will represent the index of the row within rawData (as set in useEffect), so just filter using index
+      dispatch(
+        ACTIONS.updateTable(
+          rawData.filter((_row, idx) => !deletedRows.includes(idx))
+        )
+      );
     }
 
     setDeletedRows([]);
@@ -97,7 +96,7 @@ const DataGridTable = () => {
   }, [rawData, columnNames]);
 
   return (
-    <div style={{ height: "400px", marginBottom: "100px", padding: 10 }}>
+    <div style={{ height: 400, marginBottom: 40, padding: 10 }}>
       {columns.length > 0 && (
         <div>
           <Grid component="div" container alignItems="flex-end">
@@ -122,7 +121,7 @@ const DataGridTable = () => {
               {msg}
             </p>
           </Grid>
-          <div style={{ marginTop: "30px", height: "400px" }}>
+          <div style={{ marginTop: 5, height: "400px" }}>
             <DataGrid
               columns={columns}
               rows={rows}
