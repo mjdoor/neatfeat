@@ -37,7 +37,7 @@ export default (state = intitialState, action) => {
     case ACTIONS.Types.UPDATE_GRAPH_DATA:
         return {
           ...state,
-          graphData: action.graphData
+          graphData: [...state.graphData, action.graphData]
         }
     default:
       return state;

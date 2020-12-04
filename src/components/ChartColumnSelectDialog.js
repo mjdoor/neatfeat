@@ -55,11 +55,11 @@ const ChartColumnSelectDialog = props => {
     const onCreateButtonClick = () => {
         setChartSelectOpen(true);
         dispatch(ACTIONS.updateGraphData(
-            [{
+            {
                 selectedChart: {selectedChart},
                 xAxisColumn: {xAxisColumn},
                 yAxisColumn: {yAxisColumn}
-            }]
+            }
         ));
     }
     const handleChartDialogClose = () => {

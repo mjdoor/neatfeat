@@ -41,13 +41,13 @@ const ExistedChartSelectDialog = props => {
                 </IconButton>
             </DialogTitle>
             <DialogContent align="center">
-                <FormControl style={{ minWidth: "8em", marginBottom: "2em" }}>
+                <FormControl style={{ minWidth: "8em", marginBottom: "2em", width: "85%" }}>
                     <InputLabel>Existing Charts</InputLabel>
-                    <Select onChange={handleChange} >
+                    <Select style={{ width: "100%" }} onChange={handleChange} >
                         {graphData.map(
-                            (idx, data) => (
-                                <MenuItem value={data} key={idx}>{data}
-                                    {/* {data.selectedChart} - x:{data.xAxisColumn}, y: {data.yAxisColumn} */}
+                            (data, idx) => (
+                                <MenuItem value={data} key={idx}>
+                                    {data.selectedChart.selectedChart} - x:{data.xAxisColumn.xAxisColumn}, y: {data.yAxisColumn.yAxisColumn}
                                 </MenuItem>
                             )
                         )}
