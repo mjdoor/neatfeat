@@ -5,7 +5,7 @@ const intitialState = {
   targetColumnName: "",
   columnNames: [],
   areStatsCalculating: false,
-  isTransforming: false
+  isTransforming: false,
 };
 
 export default (state = intitialState, action) => {
@@ -15,30 +15,30 @@ export default (state = intitialState, action) => {
         ...state,
         rawData: action.data,
         targetColumnName: action.targetColumnName,
-        areStatsCalculating: true
+        areStatsCalculating: true,
       };
     case ACTIONS.Types.UPDATE_COLUMNS:
       return {
         ...state,
-        columnNames: action.columns
+        columnNames: action.columns,
       };
     case ACTIONS.Types.UPDATE_TABLE:
       return {
         ...state,
         rawData: action.updatedData,
         areStatsCalculating: true,
-        columnNames: Object.keys(action.updatedData[0])
+        columnNames: Object.keys(action.updatedData[0]),
       };
     case ACTIONS.Types.SET_STATS_DATA:
       return {
         ...state,
         statsData: action.statsData,
-        areStatsCalculating: false
+        areStatsCalculating: false,
       };
     case ACTIONS.Types.APPLY_TRANSFORMATION:
       return {
         ...state,
-        isTransforming: action.isTransforming
+        isTransforming: action.isTransforming,
       };
     default:
       return state;
