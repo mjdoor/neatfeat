@@ -194,7 +194,7 @@ const StatsData = props => {
             </Grid>
             <Grid item style={{ marginLeft: "auto", marginTop: "18px" }}>
               {isChartCreated && (
-              <Button onClick={showChartOpen} hidden="false" size="small">Show Previous Chart</Button>
+              <Button onClick={showChartOpen} hidden={false} size="small">Show Previous Chart</Button>
               )}
             </Grid>
             <Grid item>

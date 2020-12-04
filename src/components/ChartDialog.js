@@ -27,7 +27,9 @@ import { BarChart, ScatterChart,
          return (
              <div>
                  <p>{`${xAxisColumn} : ${label}`}</p>
-                 <p>{`${yAxisColumn} : ${payload[0].value}`}</p>
+                 {payload.length !== 0 && (
+                    <p>{`${yAxisColumn} : ${payload[0].value}`}</p>
+                 )}
              </div>
          )
      }
@@ -66,8 +68,10 @@ const ChartDialog = props => {
                             data={rawData}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid  stroke="#eee" strokeDasharray="3 3"/>
-                                <XAxis dataKey={xAxisColumn} ticks={[10, 20, 30, 40, 50,60,70,80,90, 100]} />
-                                <YAxis />
+                                <XAxis
+                                domain={['dataMin', 'dataMax']}
+                                 label={{value: xAxisColumn, position: 'insideBottomRight'}} dataKey={xAxisColumn} />
+                                <YAxis label={{ value: yAxisColumn, angle: -90, position: 'insideLeft' }} />
                                 <Tooltip content={<CustomTooltip xAxisColumn={xAxisColumn} yAxisColumn={yAxisColumn}/>}/>
                                 <Legend />
                                 <Bar dataKey={yAxisColumn} fill="primary" />
@@ -79,8 +83,9 @@ const ChartDialog = props => {
                             height={300}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid />
-                                <XAxis type="number" dataKey={xAxisColumn} name={xAxisColumn} />
-                                <YAxis type="number" dataKey={yAxisColumn} name={yAxisColumn} />
+                                <XAxis
+                                domain={['dataMin', 'dataMax']} label={{value: xAxisColumn, position: 'insideBottomRight'}}  type="number" dataKey={xAxisColumn} name={xAxisColumn} />
+                                <YAxis label={{ value: yAxisColumn, angle: -90, position: 'insideLeft' }} type="number" dataKey={yAxisColumn} name={yAxisColumn} />
                                 <Tooltip cursor={{ strokeDasharray: "3 3" }} />
                                 <Legend />
                                 <Scatter
