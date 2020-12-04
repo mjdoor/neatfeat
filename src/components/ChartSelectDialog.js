@@ -24,7 +24,7 @@ import { BarChart, ScatterChart,
 
 const ChartSelectDialog = props => {
     //const [selectedChart, setSelectedChart] = useState();
-    const { onClose, selectedChart, open, selectedFeatures, rawData } = props;
+    const { onClose, selectedChart, open, selectedFeatures, rawData, xAxisColumn, yAxisColumn } = props;
 
     const handleClose = () => {
         onClose();
@@ -54,11 +54,11 @@ const ChartSelectDialog = props => {
                             data={rawData}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid  stroke="#eee" strokeDasharray="3 3"/>
-                                <XAxis dataKey="Id" />
+                                <XAxis dataKey={xAxisColumn} />
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey={selectedFeatures[0]} fill="primary" />
+                                <Bar dataKey={yAxisColumn} fill="primary" />
                             </BarChart>
                         )
                         case 'ScatterChart': return (
@@ -67,15 +67,14 @@ const ChartSelectDialog = props => {
                             height={300}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid />
-                                <XAxis type="number" dataKey={selectedFeatures[0]} name={selectedFeatures[0]} />
-                                <YAxis type="number" dataKey={selectedFeatures[1]} name={selectedFeatures[1]} />
+                                <XAxis type="number" dataKey={xAxisColumn} name={xAxisColumn} />
+                                <YAxis type="number" dataKey={yAxisColumn} name={yAxisColumn} />
                                 <Tooltip cursor={{ strokeDasharray: "3 3" }} />
                                 <Legend />
                                 <Scatter
                                 name="Median"
                                 data={rawData}
                                 fill="#8884d8"
-                                line
                                 shape="circle"
                                 />
                             </ScatterChart>

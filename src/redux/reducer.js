@@ -5,7 +5,8 @@ import { castNumericColumns } from "../Utilities/ObjectUtilities";
 const intitialState = {
   rawData: [],
   targetColumnName: "",
-  columnNames: []
+  columnNames: [],
+  graphData: []
 };
 
 export default (state = intitialState, action) => {
@@ -33,6 +34,11 @@ export default (state = intitialState, action) => {
         ),
         columnNames: Object.keys(action.updatedData[0])
       };
+    case ACTIONS.Types.UPDATE_GRAPH_DATA:
+        return {
+          ...state,
+          graphData: action.graphData
+        }
     default:
       return state;
   }
