@@ -12,11 +12,12 @@ import {
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import { useDispatch, useSelector } from "react-redux";
-import ACTIONS from "../redux/actions";
+import ChartDialog from "./ChartDialog";
 
-const ExistedChartSelectDialog = props => {
+const ExistingChartSelectDialog = props => {
     const { graphData } = useSelector(state => state);
     const [selectedValue, setSelectedValue] = useState();
+    const [chartOpen, setChartOpen] = useState(false);
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -25,6 +26,11 @@ const ExistedChartSelectDialog = props => {
 
     const handleChange = event => {
         setSelectedValue(event.target.value);
+        setChartOpen(true);
+    }
+
+    const handleChartDialogClose = () => {
+        setChartOpen(false);
     }
     
 
@@ -54,8 +60,17 @@ const ExistedChartSelectDialog = props => {
                     </Select>
                 </FormControl>
             </DialogContent>
+            {selectedValue !== undefined && (
+            <ChartDialog
+            open={chartOpen}
+            onClose={handleChartDialogClose}
+            selectedChart={selectedValue.selectedChart.selectedChart}
+            xAxisColumn={selectedValue.xAxisColumn.xAxisColumn}
+            yAxisColumn={selectedValue.yAxisColumn.yAxisColumn}
+            rawData={props.rawData} />
+            )}
         </Dialog>
     )
 }
 
-export default ExistedChartSelectDialog;
+export default ExistingChartSelectDialog;

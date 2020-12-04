@@ -26,7 +26,7 @@ import MathematicalCombinationTransformer from "../../Transformers/MathematicalC
 import DeleteColumns from "../../Transformers/DeleteColumns";
 import StatisticsTable from "./StatisticsTable";
 import ChartColumnSelectDialog from "../ChartColumnSelectDialog";
-import ExistedChartSelectDialog from "../ExistedChartSelectDialog";
+import ExistingChartSelectDialog from "../ExistingChartSelectDialog";
 import ReactTooltip from "react-tooltip";
 import InfoIcon from "@material-ui/icons/Info";
 
@@ -194,13 +194,13 @@ const StatsData = props => {
             </Grid>
             <Grid item style={{ marginLeft: "auto", marginTop: "18px" }}>
               {isChartCreated && (
-              <Button onClick={showChartOpen} hidden="false" size="small">Show Chart</Button>
+              <Button onClick={showChartOpen} hidden="false" size="small">Show Previous Chart</Button>
               )}
             </Grid>
             <Grid item>
               <div style={{marginTop: "18px"}}>
               <InfoIcon data-tip data-for="chartTooltip" />
-              <ReactTooltip id="chartTooltip" place="top" effect="solid">Select two columns for charts. If you select only one column, X Axis will be Id automatically.</ReactTooltip>
+              <ReactTooltip id="chartTooltip" place="top" effect="solid">Select two columns for charts. If you select only one column, X Axis will be set to Id automatically.</ReactTooltip>
               </div>
             </Grid>
             <Grid item>
@@ -230,7 +230,7 @@ const StatsData = props => {
               selectedFeatures={selectedFeatures}
               rawData={rawData}
               ></ChartColumnSelectDialog>
-              <ExistedChartSelectDialog open={showSelectChartOpen} onClose={handleShowChartDialogClose} />
+              <ExistingChartSelectDialog open={showSelectChartOpen} onClose={handleShowChartDialogClose} rawData={rawData} />
 
             </Grid>
             <Grid item >

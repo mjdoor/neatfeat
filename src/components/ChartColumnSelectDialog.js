@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from "@material-ui/icons/Close";
-import ChartSelectDialog from "../components/ChartSelectDialog";
+import ChartDialog from "./ChartDialog";
 import {useSelector, useDispatch } from "react-redux";
 import ACTIONS from "../redux/actions";
 
@@ -121,7 +121,7 @@ const ChartColumnSelectDialog = props => {
                 onClick={onCreateButtonClick}
                 >Create {selectedChart}</Button>
             )}
-            <ChartSelectDialog
+            <ChartDialog
               open={chartSelectOpen}
               onClose={handleChartDialogClose}
               selectedChart={selectedChart}
@@ -129,7 +129,7 @@ const ChartColumnSelectDialog = props => {
               xAxisColumn={xAxisColumn}
               yAxisColumn={yAxisColumn}
               rawData={rawData}
-              ></ChartSelectDialog>
+              ></ChartDialog>
         </Dialog>
     )
 }

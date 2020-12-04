@@ -22,7 +22,19 @@ import { BarChart, ScatterChart,
     Scatter
  } from "recharts";
 
-const ChartSelectDialog = props => {
+ const CustomTooltip = ({ active, payload, label, xAxisColumn, yAxisColumn }) => {
+     if(active) {
+         return (
+             <div>
+                 <p>{`${xAxisColumn} : ${label}`}</p>
+                 <p>{`${yAxisColumn} : ${payload[0].value}`}</p>
+             </div>
+         )
+     }
+     return null;
+ };
+
+const ChartDialog = props => {
     //const [selectedChart, setSelectedChart] = useState();
     const { onClose, selectedChart, open, selectedFeatures, rawData, xAxisColumn, yAxisColumn } = props;
 
@@ -54,9 +66,9 @@ const ChartSelectDialog = props => {
                             data={rawData}
                             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid  stroke="#eee" strokeDasharray="3 3"/>
-                                <XAxis dataKey={xAxisColumn} />
+                                <XAxis dataKey={xAxisColumn} ticks={[10, 20, 30, 40, 50,60,70,80,90, 100]} />
                                 <YAxis />
-                                <Tooltip />
+                                <Tooltip content={<CustomTooltip xAxisColumn={xAxisColumn} yAxisColumn={yAxisColumn}/>}/>
                                 <Legend />
                                 <Bar dataKey={yAxisColumn} fill="primary" />
                             </BarChart>
@@ -83,29 +95,8 @@ const ChartSelectDialog = props => {
                 })()}
                 
             </DialogContent>
-            {/* <DialogTitle>Choose the Chart type</DialogTitle>
-            <DialogContent align="center">
-                {selectedFeatures.length !== 0 ? <div>
-                        <DialogContentText>Selected Features</DialogContentText>
-                        {selectedFeatures.map(feature => (
-                            <DialogContentText key={feature}>{feature}</DialogContentText>
-                        ))}
-                        </div> : <DialogContentText>Select Features for a chart.</DialogContentText>}
-                <FormControl style={{ minWidth: "8em", marginBottom: "2em" }}>
-                    <InputLabel>Chart Type</InputLabel>
-                    <Select onChange={handleChange}>
-                        <MenuItem key="Placeholder" disabled>Chart Type</MenuItem>
-                        {props.chartTypes.map(data => (
-                            <MenuItem value={data} key={data}>
-                                {data}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </DialogContent>
-            <Button onClick={handleClick} variant="contained" color="primary"> OK</Button> */}
         </Dialog>
     )
 }
 
-export default ChartSelectDialog;
+export default ChartDialog;
