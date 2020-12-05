@@ -28,6 +28,6 @@ const store = createStore(
   applyMiddleware(thunk)
 );
 
-store.subscribe(() => saveState(store.getState()));
+store.subscribe(() => saveState(store.getState().present));
 
 export default store;
