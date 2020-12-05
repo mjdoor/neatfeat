@@ -28,7 +28,7 @@ import { BarChart, ScatterChart,
          return (
              <div>
                  <p>{`${xAxisColumn} : ${label}`}</p>
-                 {(payload !== undefined) && (
+                 {(payload.length !== 0) && (
                     <p>{`${yAxisColumn} : ${payload[0].value}`}</p>
                  )}
              </div>
@@ -159,7 +159,7 @@ const ChartDialog = props => {
                                 <YAxis label={{ value: "Count", angle: -90, position: 'insideLeft' }} />
                                 <Tooltip content={<CustomTooltip xAxisColumn={xAxisColumn} yAxisColumn="count"/>}/>
                                 <Legend />
-                                <Bar dataKey="count" fill="primary" />
+                                <Bar dataKey="count" fill="#8884d8" />
                             </BarChart>
                             <DialogContentText>Number of Null Values: {numOfNull}</DialogContentText>
                             </div>

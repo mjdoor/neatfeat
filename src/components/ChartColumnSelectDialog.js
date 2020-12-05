@@ -38,10 +38,8 @@ const ChartColumnSelectDialog = props => {
 
     useEffect(() => {
         if((selectedFeatures.length > 2 || selectedFeatures.length === 0)) {
-            if(selectedChart !== 'Histogram')
-                setShowDropboxes(false); setShowHistogram(false);
-            if(selectedFeatures.length !== 1 && selectedChart === 'Histogram')
-                setShowHistogram(false); setShowDropboxes(false);
+            setShowDropboxes(false);
+            setShowHistogram(false);
         }
         else {
             if(selectedChart !== 'Histogram') {
@@ -53,112 +51,116 @@ const ChartColumnSelectDialog = props => {
                 }
             }
             else {
-                setShowHistogram(true);
-                setShowDropboxes(false);
-
-                const convertData = {};
-                const columnData = [];
-                if(rawData !== undefined && selectedChart === 'Histogram') {     //for histogram
-                    const featureNames = Object.keys(rawData[0]);
-                    const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
-                      acc[featureName] = [];
-                      return acc;
-                    }, {}); // builds object { Feature1: [], Feature2: [],...}
-                const columns = rawData.reduce((acc, row) => {
-                    Object.entries(row).forEach(([featureName, value]) => {
-                        acc[featureName].push(value);
-                    });
-                    return acc;
-                    }, initialColumnBuilder); // populates column arrays { Feature1: [1,2,3...], Feature2...}
-                const dataForHistogram = columns[selectedFeatures[0]];
-                const removedIndices = [];
-                const filteredArr = dataForHistogram.filter((el, idx) => {
-                    const keep = el !== null && el !== undefined;
-                    if (!keep) {
-                    removedIndices.push(idx);
-                    }
-                    return keep;
-                });
-                setNumOfNull(removedIndices.length);
-                setNewDataForHistogram(filteredArr);
-                const difference = max(filteredArr) - min(filteredArr);
-                const recommendedBucSize = Math.floor(difference / 7);
-                setRecommenedBucketSize(recommendedBucSize);
-                setBucketSize(recommendedBucketSize);
-                let bucketSizeArr = [];
-                bucketSizeArr.push(recommendedBucSize);
-                if(recommendedBucSize < 10) {
-                    for(let i = 1; i < 4; i++) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 10 && recommendedBucSize < 25) {
-                    for(let i = 5; i < 20; i += 5) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 25 && recommendedBucSize < 100) {
-                    for(let i = 10; i < 40; i += 10) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 100 && recommendedBucSize < 250) {
-                    for(let i = 50; i < 200; i+= 50) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 250 && recommendedBucSize < 950) {
-                    for(let i = 200; i < 800; i+= 200) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 950 && recommendedBucSize < 2750) {
-                    for(let i = 700; i < 2100; i+= 700) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 2750 && recommendedBucSize < 12000) {
-                    for(let i = 2500; i < 10000; i+= 2500) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 12000 && recommendedBucSize < 38000) {
-                    for(let i = 8500; i < 34000; i+= 8500) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
-                }
-                else if(recommendedBucSize >= 38000 && recommendedBucSize < 130000) {
-                    for(let i = 30000; i < 120000; i+= 30000) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
-                    }
+                if(selectedFeatures.length !== 1) {
+                    setShowDropboxes(false);
+                    setShowHistogram(false);
                 }
                 else {
-                    for(let i = 60000; i < 240000; i+= 60000) {
-                        bucketSizeArr.push(recommendedBucSize + i);
-                        bucketSizeArr.push(recommendedBucSize - i);
+                    setShowHistogram(true);
+                    setShowDropboxes(false);
+
+                    const convertData = {};
+                    const columnData = [];
+                    if(rawData !== undefined && selectedChart === 'Histogram') {     //for histogram
+                        const featureNames = Object.keys(rawData[0]);
+                        const initialColumnBuilder = featureNames.reduce((acc, featureName) => {
+                        acc[featureName] = [];
+                        return acc;
+                        }, {}); // builds object { Feature1: [], Feature2: [],...}
+                    const columns = rawData.reduce((acc, row) => {
+                        Object.entries(row).forEach(([featureName, value]) => {
+                            acc[featureName].push(value);
+                        });
+                        return acc;
+                        }, initialColumnBuilder); // populates column arrays { Feature1: [1,2,3...], Feature2...}
+                    const dataForHistogram = columns[selectedFeatures[0]];
+                    const removedIndices = [];
+                    const filteredArr = dataForHistogram.filter((el, idx) => {
+                        const keep = el !== null && el !== undefined;
+                        if (!keep) {
+                        removedIndices.push(idx);
+                        }
+                        return keep;
+                    });
+                    setNumOfNull(removedIndices.length);
+                    setNewDataForHistogram(filteredArr);
+                    const difference = max(filteredArr) - min(filteredArr);
+                    const recommendedBucSize = Math.floor(difference / 7);
+                    setRecommenedBucketSize(recommendedBucSize);
+                    setBucketSize(recommendedBucketSize);
+                    let bucketSizeArr = [];
+                    bucketSizeArr.push(recommendedBucSize);
+                    if(recommendedBucSize < 10) {
+                        for(let i = 1; i < 4; i++) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
                     }
-                }
-                bucketSizeArr.sort((a, b) => a - b);
-                
-                const arr = bucketSizeArr.filter(b => b > 0);
-                setBucketSizes(arr);
-                const x = 1;
-                }
-            }    
+                    else if(recommendedBucSize >= 10 && recommendedBucSize < 25) {
+                        for(let i = 5; i < 20; i += 5) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 25 && recommendedBucSize < 100) {
+                        for(let i = 10; i < 40; i += 10) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 100 && recommendedBucSize < 250) {
+                        for(let i = 50; i < 200; i+= 50) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 250 && recommendedBucSize < 950) {
+                        for(let i = 200; i < 800; i+= 200) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 950 && recommendedBucSize < 2750) {
+                        for(let i = 700; i < 2100; i+= 700) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 2750 && recommendedBucSize < 12000) {
+                        for(let i = 2500; i < 10000; i+= 2500) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 12000 && recommendedBucSize < 38000) {
+                        for(let i = 8500; i < 34000; i+= 8500) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else if(recommendedBucSize >= 38000 && recommendedBucSize < 130000) {
+                        for(let i = 30000; i < 120000; i+= 30000) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    else {
+                        for(let i = 60000; i < 240000; i+= 60000) {
+                            bucketSizeArr.push(recommendedBucSize + i);
+                            bucketSizeArr.push(recommendedBucSize - i);
+                        }
+                    }
+                    bucketSizeArr.sort((a, b) => a - b);
+                    
+                    const arr = bucketSizeArr.filter(b => b > 0);
+                    setBucketSizes(arr);
+                    const x = 1;
+                    }
+                } 
+            }   
         }
 
     }, [selectedFeatures, selectedChart]);
-
-    const filterNegativeVals = (v) => { return v > 0; }
 
     const handleClose = () => {
         onClose();
@@ -219,23 +221,13 @@ const ChartColumnSelectDialog = props => {
             for(let b = minValue; b <= maxValue; b += event.target.value) 
             { 
                 bucArr.push(b);
-                //setBucketsArr(bucketsArr => [...bucketsArr, b]);
             }
 
             if(bucketsArr[bucketsArr.length - 1] !== maxValue) {
-                //setBucketsArr(bucketsArr => [...bucketsArr, maxValue]);
                 bucArr.push(maxValue);
             }
 
             setBucketsArr(bucArr);
-
-            const x = bucketsArr;
-
-
-            newDataForHistogram.map(s => {
-                
-
-            })
         }
     }
 
@@ -252,14 +244,15 @@ const ChartColumnSelectDialog = props => {
                 </IconButton>
             </DialogTitle>
             <DialogContent align="center">
-                {(!showDropboxes && !showHistogram && selectedChart !== "Histogram") && (
+                {(!showDropboxes && !showHistogram && selectedChart !== 'Histogram') && (
                     <DialogContentText>You need to select 1 or 2 columns.</DialogContentText>
                 )}
-                {(!showHistogram && !showDropboxes && selectedChart === "Histogram") && (
+                {(!showHistogram && !showDropboxes && selectedChart === 'Histogram') && (
                      <DialogContentText>You need to select one column.</DialogContentText>
                 )}
-                {(showHistogram && !showDropboxes && selectedChart === "Histogram") && (
+                {(showHistogram && !showDropboxes && selectedChart === 'Histogram') && (
                     <div>
+                        <DialogContentText>X Axis: {selectedFeatures[0]}</DialogContentText>
                         <DialogContentText>Recommended Size: {recommendedBucketSize}</DialogContentText>
                         <InputLabel>Bucket size</InputLabel>
                         <Select style={{width: "100%"}} onChange={handleBucketSizeChange}
@@ -271,7 +264,7 @@ const ChartColumnSelectDialog = props => {
                         </Select>
                     </div>
                 )}
-                {(showDropboxes && !showHistogram && selectedChart !== "Histogram") && (
+                {(showDropboxes && !showHistogram && selectedChart !== 'Histogram') && (
                     <div style={{ width: "100%", marginBottom: "10%" }}>
                         <div style={{ display: "inline-block", width: "45%", margin: "2%"}}>
                         <InputLabel>X Axis</InputLabel>
