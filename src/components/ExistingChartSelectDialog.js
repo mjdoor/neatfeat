@@ -67,7 +67,11 @@ const ExistingChartSelectDialog = props => {
             selectedChart={selectedValue.selectedChart.selectedChart}
             xAxisColumn={selectedValue.xAxisColumn.xAxisColumn}
             yAxisColumn={selectedValue.yAxisColumn.yAxisColumn}
-            rawData={props.rawData} />
+            rawData={props.rawData}
+            bucketSize={selectedValue.bucketSize}
+            numOfNull={selectedValue.numOfNull}
+            newDataForHistogram={selectedValue.newDataForHistogram}
+            bucketsArr={selectedValue.bucketsArr} />
             )}
         </Dialog>
     )

@@ -54,7 +54,7 @@ const StatsData = props => {
 
   const classes = useStyles();
   
-  const chartTypes = ["BarChart", "ScatterChart"];
+  const chartTypes = ["BarChart", "ScatterChart", "Histogram"];
 
   const handleTransformationSelect = transformerName => {
     const selectedTransformer = availableTransformers.find(
@@ -200,7 +200,7 @@ const StatsData = props => {
             <Grid item>
               <div style={{marginTop: "18px"}}>
               <InfoIcon data-tip data-for="chartTooltip" />
-              <ReactTooltip id="chartTooltip" place="top" effect="solid">Select two columns for charts. If you select only one column, X Axis will be set to Id automatically.</ReactTooltip>
+              <ReactTooltip id="chartTooltip" place="top" effect="solid">Select two columns for charts. If you select only one column, X Axis will be set to Id automatically. For Histogram, select one column.</ReactTooltip>
               </div>
             </Grid>
             <Grid item>

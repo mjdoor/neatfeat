@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogTitle,
@@ -21,13 +21,14 @@ import { BarChart, ScatterChart,
     Legend,
     Scatter
  } from "recharts";
+ import { min, max } from "../StatisticalFunctions/NumericStatsFormulas";
 
  const CustomTooltip = ({ active, payload, label, xAxisColumn, yAxisColumn }) => {
      if(active) {
          return (
              <div>
                  <p>{`${xAxisColumn} : ${label}`}</p>
-                 {payload.length !== 0 && (
+                 {(payload !== undefined) && (
                     <p>{`${yAxisColumn} : ${payload[0].value}`}</p>
                  )}
              </div>
@@ -38,7 +39,54 @@ import { BarChart, ScatterChart,
 
 const ChartDialog = props => {
     //const [selectedChart, setSelectedChart] = useState();
-    const { onClose, selectedChart, open, selectedFeatures, rawData, xAxisColumn, yAxisColumn } = props;
+    const { onClose, selectedChart, open, selectedFeatures, rawData, xAxisColumn, yAxisColumn, bucketSize, numOfNull, newDataForHistogram, bucketsArr } = props;
+
+    const [histogramData, setHistogramData] = useState([]);
+    //const [bucketsArr, setBucketsArr] = useState([]);
+
+    useEffect(() => {
+        if(newDataForHistogram !== undefined && bucketSize > 0) {
+            let histogramDataArr = {};
+
+            for(let i = 0; i < bucketsArr.length - 1; i++) {
+                histogramDataArr[`${bucketsArr[i]} - ${bucketsArr[i + 1]}`] = 0;
+            }
+
+            const maxValue = max(newDataForHistogram);
+
+            newDataForHistogram.map(s => {
+                for(let i = 0; i < bucketsArr.length - 1; i++) {
+                    if(i === bucketsArr.length - 2 && s === maxValue) {
+                        histogramDataArr[`${bucketsArr[i]} - ${bucketsArr[i + 1]}`]++;
+                        break;
+                    }
+
+                    if(between(s, bucketsArr[i], bucketsArr[i + 1]))
+                    {
+                        histogramDataArr[`${bucketsArr[i]} - ${bucketsArr[i + 1]}`]++;
+                        break;
+                    }
+                }
+            });
+
+            let tempUsableData = [];
+            for(var bucket in histogramDataArr) {
+                tempUsableData.push({
+                    [xAxisColumn]: bucket,
+                    "count": histogramDataArr[bucket]
+                });
+            }
+
+            setHistogramData(tempUsableData);
+            const x =1;
+        }
+    }, [newDataForHistogram, bucketSize])
+
+    const between = (x, min, max) => {
+        if(x == max) 
+            return true;
+        return x >= min && x < max;
+    }
 
     const handleClose = () => {
         onClose();
@@ -95,6 +143,26 @@ const ChartDialog = props => {
                                 shape="circle"
                                 />
                             </ScatterChart>
+                        )
+                        case 'Histogram': return (
+                            <div>
+                            <BarChart
+                            width={600}
+                            height={300}
+                            data={histogramData}
+                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                            >
+                                <CartesianGrid  stroke="#eee" strokeDasharray="3 3"/>
+                                <XAxis
+                                domain={['dataMin', 'dataMax']}
+                                 label={{value: xAxisColumn, position: 'insideBottomRight'}} dataKey={xAxisColumn} />
+                                <YAxis label={{ value: "Count", angle: -90, position: 'insideLeft' }} />
+                                <Tooltip content={<CustomTooltip xAxisColumn={xAxisColumn} yAxisColumn="count"/>}/>
+                                <Legend />
+                                <Bar dataKey="count" fill="primary" />
+                            </BarChart>
+                            <DialogContentText>Number of Null Values: {numOfNull}</DialogContentText>
+                            </div>
                         )
                     }
                 })()}
