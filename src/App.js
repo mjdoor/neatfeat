@@ -7,7 +7,6 @@ import theme from "./themes/theme";
 import AppToolBar from "./components/AppToolBar";
 import DataGridTable from "./components/DataGridTable";
 import StatsData from "./components/Statistics/StatsData";
-import DownloadCSV from "./components/DownloadCSV";
 
 import store from "./redux/store";
 
@@ -18,7 +17,6 @@ function App() {
         <AppToolBar />
         <DataGridTable />
         <StatsData />
-        <DownloadCSV />
       </ThemeProvider>
     </Provider>
   );

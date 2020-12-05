@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { roundNum } from "../Utilities/NumberUtilities";
 import ACTIONS from "../redux/actions";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   fadingOut: {
@@ -98,41 +98,62 @@ const DataGridTable = () => {
   return (
     <div style={{ height: 400, marginBottom: 40, padding: 10 }}>
       {columns.length > 0 && (
-        <div>
-          <Grid component="div" container alignItems="flex-end">
-            <IconButton
-              aria-label="delete"
-              color="secondary"
-              onClick={() => deleteRows()}
-              disabled={deletedRows.length === 0}
-            >
-              <DeleteIcon />
-            </IconButton>
-            <p
+        <Grid container>
+          <Grid item xs={"auto"} style={{ position: "relative", minWidth: 40 }}>
+            <Typography
+              component="div"
               style={{
-                fontWeight: "bolder",
-                display: "inline",
-                paddingLeft: 10,
-                paddingBottom: 13.5,
-                margin: 0
+                position: "absolute",
+                width: 200,
+                top: "40%",
+                left: "50%",
+                transform: "translateX(-50%) translateY(-50%) rotate(-90deg)",
+                fontWeight: "bold",
+                fontSize: 30
               }}
-              className={hideMsg ? classes.fadingOut : ""}
             >
-              {msg}
-            </p>
+              Raw Data
+            </Typography>
           </Grid>
-          <div style={{ marginTop: 5, height: "400px" }}>
-            <DataGrid
-              columns={columns}
-              rows={rows}
-              rowsPerPageOptions={[5, 10, 25, 50, 100]}
-              pageSize={5}
-              checkboxSelection
-              onRowSelected={handleRowSelection}
-              disableSelectionOnClick
-            />
-          </div>
-        </div>
+          <Grid item xs>
+            <div>
+              <Grid component="div" container alignItems="flex-end">
+                <IconButton
+                  aria-label="delete"
+                  color="secondary"
+                  onClick={() => deleteRows()}
+                  disabled={deletedRows.length === 0}
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <p
+                  style={{
+                    fontWeight: "bolder",
+                    display: "inline",
+                    paddingLeft: 10,
+                    paddingBottom: 13.5,
+                    margin: 0
+                  }}
+                  className={hideMsg ? classes.fadingOut : ""}
+                >
+                  {msg}
+                </p>
+              </Grid>
+
+              <div style={{ marginTop: 5, height: "400px" }}>
+                <DataGrid
+                  columns={columns}
+                  rows={rows}
+                  rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                  pageSize={5}
+                  checkboxSelection
+                  onRowSelected={handleRowSelection}
+                  disableSelectionOnClick
+                />
+              </div>
+            </div>
+          </Grid>
+        </Grid>
       )}
     </div>
   );

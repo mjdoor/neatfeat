@@ -158,78 +158,96 @@ const StatsData = props => {
   return (
     <div style={{ padding: 10 }}>
       {statsData !== undefined && (
-        <Fragment>
-          <Grid container alignItems="flex-end">
-            <Grid item>
-              <Grid container alignItems="center">
-                <Grid item>
-                  <Typography
-                    component="p"
-                    style={{ fontWeight: showNumeric ? "normal" : "bold" }}
-                  >
-                    Categorical
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Switch
-                    checked={showNumeric}
-                    onChange={() => setShowNumeric(orig => !orig)}
-                    name="datatypeSwitch"
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography
-                    component="p"
-                    style={{ fontWeight: showNumeric ? "bold" : "normal" }}
-                  >
-                    Numerical
-                  </Typography>
+        <Grid container>
+          <Grid item xs={"auto"} style={{ position: "relative", minWidth: 40 }}>
+            <Typography
+              component="div"
+              style={{
+                position: "absolute",
+                width: 200,
+                top: "40%",
+                left: "50%",
+                transform: "translateX(-50%) translateY(-50%) rotate(-90deg)",
+                fontWeight: "bold",
+                fontSize: 30
+              }}
+            >
+              Stats Data
+            </Typography>
+          </Grid>
+          <Grid item xs>
+            <Grid container alignItems="flex-end">
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <Typography
+                      component="p"
+                      style={{ fontWeight: showNumeric ? "normal" : "bold" }}
+                    >
+                      Categorical
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Switch
+                      checked={showNumeric}
+                      onChange={() => setShowNumeric(orig => !orig)}
+                      name="datatypeSwitch"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      component="p"
+                      style={{ fontWeight: showNumeric ? "bold" : "normal" }}
+                    >
+                      Numerical
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            {isTransforming && (
-              <Fragment>
-                <Grid item style={{ marginLeft: 100 }}>
-                  <CircularProgress />
-                </Grid>
-                <Grid item>
-                  <Typography>Applying transformation...</Typography>
-                </Grid>
-              </Fragment>
-            )}
-            <Grid item style={{ marginLeft: "auto" }}>
-              <FormControl
-                className={classes.formControl}
-                disabled={selectedFeatures.length === 0}
-              >
-                <InputLabel>Transformations</InputLabel>
-                <Select
-                  value={""}
-                  onChange={event =>
-                    handleTransformationSelect(event.target.value)
-                  }
+              {isTransforming && (
+                <Fragment>
+                  <Grid item style={{ marginLeft: 100 }}>
+                    <CircularProgress />
+                  </Grid>
+                  <Grid item>
+                    <Typography>Applying transformation...</Typography>
+                  </Grid>
+                </Fragment>
+              )}
+              <Grid item style={{ marginLeft: "auto" }}>
+                <FormControl
+                  className={classes.formControl}
+                  disabled={selectedFeatures.length === 0}
                 >
-                  {availableTransformers.map((transformer, idx) => (
-                    <MenuItem key={idx} value={transformer.name}>
-                      {transformer.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  <InputLabel>Transformations</InputLabel>
+                  <Select
+                    value={""}
+                    onChange={event =>
+                      handleTransformationSelect(event.target.value)
+                    }
+                  >
+                    {availableTransformers.map((transformer, idx) => (
+                      <MenuItem key={idx} value={transformer.name}>
+                        {transformer.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
-          </Grid>
-          <StatisticsTable
-            numerical={showNumeric}
-            statsData={statsData}
-            onSelectionChange={handleSelectionChange}
-          />
-          {optionComponentTransformer && (
-            <OptionComponent
-              onClose={() => setOptionComponentTransformer(null)}
-              onTransform={handleTransformWithOptions}
+            <StatisticsTable
+              numerical={showNumeric}
+              statsData={statsData}
+              onSelectionChange={handleSelectionChange}
             />
-          )}
-        </Fragment>
+            {optionComponentTransformer && (
+              <OptionComponent
+                onClose={() => setOptionComponentTransformer(null)}
+                onTransform={handleTransformWithOptions}
+              />
+            )}
+          </Grid>
+        </Grid>
       )}
     </div>
   );

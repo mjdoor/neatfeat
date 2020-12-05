@@ -20,5 +20,6 @@ export const roundNum = (num, places) => {
 };
 
 export const combinationWithReplacement = (n, r) => {
-  return factorial(n + r - 1) / (factorial(r) * factorial(n - 1));
+  const result = factorial(n + r - 1) / (factorial(r) * factorial(n - 1));
+  return isNaN(result) ? Number.MAX_SAFE_INTEGER : result;
 };

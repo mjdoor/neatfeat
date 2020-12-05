@@ -6,16 +6,17 @@ import RedoIcon from "@material-ui/icons/Redo";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import UploadCSV from "./UploadCSV";
+import DownloadCSV from "./DownloadCSV";
 
 import { useDispatch, useSelector } from "react-redux";
 import { ActionCreators } from "redux-undo";
 
 const useStyles = makeStyles(theme => ({
-  absoluteTopRight: {
-    position: "fixed",
-    right: 30,
-    top: 7,
-    zIndex: 1101
+  defaultCenter: {
+    position: "absolute",
+    left: "50%",
+    top: "6em",
+    transform: "translateX(-50%)"
   }
 }));
 
@@ -28,10 +29,10 @@ const AppToolBar = () => {
     freshUpload: state.present.rawData?.length === 0
   }));
   return (
-    <div style={{ padding: 10 }}>
+    <div style={{ padding: 10, marginBottom: "3em" }}>
       <AppBar>
         <Toolbar>
-          <Grid justify={"space-between"} container>
+          <Grid justify={"space-between"} container alignItems="center">
             <Grid item xs={4}>
               <Typography color="secondary" align="left" noWrap variant="h4">
                 Neat Feat
@@ -57,15 +58,28 @@ const AppToolBar = () => {
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid item xs={4} />
+            <Grid item xs={4}>
+              <Grid container justify="flex-end" spacing={3}>
+                <Grid item>
+                  <div className={freshUpload ? classes.defaultCenter : ""}>
+                    <UploadCSV />
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <DownloadCSV />
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-      <div style={{ marginTop: "4em" }}>
-        <div className={!freshUpload ? classes.absoluteTopRight : ""}>
-          <UploadCSV />
-        </div>
-      </div>
     </div>
   );
 };
