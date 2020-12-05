@@ -1,5 +1,5 @@
-import React from "react";
-import { Typography, IconButton, Grid } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { Typography, IconButton, Grid, Tooltip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
@@ -28,6 +28,30 @@ const AppToolBar = () => {
     canRedo: state.future.length > 0,
     freshUpload: state.present.rawData?.length === 0
   }));
+
+  const performUndo = () => {
+    dispatch(ActionCreators.undo());
+  };
+  const performRedo = () => {
+    dispatch(ActionCreators.redo());
+  };
+
+  useEffect(() => {
+    const handleKeyDown = event => {
+      if (event.ctrlKey && event.key === "z" && canUndo) {
+        performUndo();
+      } else if (event.ctrlKey && event.key === "y" && canRedo) {
+        performRedo();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+    // eslint-disable-next-line
+  }, [canUndo, canRedo]);
   return (
     <div style={{ padding: 10, marginBottom: "3em" }}>
       <AppBar>
@@ -40,22 +64,30 @@ const AppToolBar = () => {
             </Grid>
             <Grid item xs={4}>
               <Grid container justify={"center"}>
-                <IconButton
-                  aria-label="undo-btn"
-                  color="secondary"
-                  onClick={() => dispatch(ActionCreators.undo())}
-                  disabled={!canUndo}
-                >
-                  <UndoIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="redo-btn"
-                  color="secondary"
-                  onClick={() => dispatch(ActionCreators.redo())}
-                  disabled={!canRedo}
-                >
-                  <RedoIcon />
-                </IconButton>
+                <Tooltip title={canUndo ? "Ctrl + Z" : ""}>
+                  <span>
+                    <IconButton
+                      aria-label="undo-btn"
+                      color="secondary"
+                      onClick={performUndo}
+                      disabled={!canUndo}
+                    >
+                      <UndoIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title={canRedo ? "Ctrl + Y" : ""}>
+                  <span>
+                    <IconButton
+                      aria-label="redo-btn"
+                      color="secondary"
+                      onClick={performRedo}
+                      disabled={!canRedo}
+                    >
+                      <RedoIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
               </Grid>
             </Grid>
             <Grid item xs={4}>

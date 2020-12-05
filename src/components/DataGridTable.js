@@ -97,7 +97,7 @@ const DataGridTable = () => {
 
   return (
     <div style={{ height: 400, marginBottom: 40, padding: 10 }}>
-      {columns.length > 0 && (
+      {rawData.length > 0 && (
         <Grid container>
           <Grid item xs={"auto"} style={{ position: "relative", minWidth: 40 }}>
             <Typography
