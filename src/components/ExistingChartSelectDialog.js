@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import ChartDialog from "./ChartDialog";
 
 const ExistingChartSelectDialog = props => {
-  const { graphData } = useSelector(state => state);
+  const { graphData } = useSelector(state => state.present);
   const [selectedValue, setSelectedValue] = useState();
   const [chartOpen, setChartOpen] = useState(false);
 

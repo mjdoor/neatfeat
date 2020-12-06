@@ -149,7 +149,7 @@ const ChartDialog = props => {
                   <Tooltip cursor={{ strokeDasharray: "3 3" }} />
                   <Legend />
                   <Scatter
-                    name="Median"
+                    name="Data Point"
                     data={rawData}
                     fill="#8884d8"
                     shape="circle"

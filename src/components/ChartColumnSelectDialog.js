@@ -20,7 +20,7 @@ const ChartColumnSelectDialog = props => {
   const { onClose, selectedChart, open, selectedFeatures, rawData } = props;
 
   const dispatch = useDispatch();
-  const { targetColumnName } = useSelector(state => state);
+  const { targetColumnName } = useSelector(state => state.present);
 
   const [chartSelectOpen, setChartSelectOpen] = useState(false);
   const [xAxisColumn, setXAxisColumn] = useState("");
@@ -51,6 +51,7 @@ const ChartColumnSelectDialog = props => {
           selectedFeatures[0] !== targetColumnName
         ) {
           setIncludeTargetColumn(true);
+          setXAxisColumn(selectedFeatures[0]);
           setYAxisColumn(targetColumnName);
           setShowDropboxes(true);
           setShowHistogram(false);

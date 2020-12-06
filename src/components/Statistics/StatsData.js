@@ -273,6 +273,7 @@ const StatsData = props => {
                   <Select
                     value={selectedChart}
                     onChange={event => handleChartSelect(event.target.value)}
+                    disabled={!showNumeric}
                   >
                     {chartTypes.map((chartType, idx) => (
                       <MenuItem key={idx} value={chartType}>
