@@ -43,11 +43,13 @@ const ChartColumnSelectDialog = props => {
         }
         else {
             if(selectedChart !== 'Histogram') {
-                setShowDropboxes(true);
-                setShowHistogram(false);
-                if(selectedFeatures.length === 1) {
-                    selectedFeatures.push("Id");
-                    setXAxisColumn("Id");
+                if(selectedChart !== '') {
+                    setShowDropboxes(true);
+                    setShowHistogram(false);
+                    if(selectedFeatures.length === 1) {
+                        selectedFeatures.push("Id");
+                        setXAxisColumn("Id");
+                    }
                 }
             }
             else {
