@@ -4,6 +4,7 @@ const intitialState = {
   rawData: [],
   targetColumnName: "",
   columnNames: [],
+  graphData: [],
   areStatsCalculating: false,
   isTransforming: false
 };
@@ -16,7 +17,8 @@ export default (state = intitialState, action) => {
         rawData: action.data,
         targetColumnName: action.targetColumnName,
         areStatsCalculating: true,
-        columnNames: Object.keys(action.data[0])
+        columnNames: Object.keys(action.data[0]),
+        graphData: []
       };
     case ACTIONS.Types.UPDATE_TABLE:
       return {
@@ -35,6 +37,11 @@ export default (state = intitialState, action) => {
       return {
         ...state,
         isTransforming: action.isTransforming
+      };
+    case ACTIONS.Types.UPDATE_GRAPH_DATA:
+      return {
+        ...state,
+        graphData: [...state.graphData, action.graphData]
       };
     default:
       return state;

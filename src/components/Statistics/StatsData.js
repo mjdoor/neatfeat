@@ -7,6 +7,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Button,
   CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,6 +31,10 @@ import PolynomialFeaturesOptions from "../Transformations/PolynomialFeaturesOpti
 import PolynomialFeaturesTransformer from "../../Transformers/PolynomialFeaturesTransformer";
 
 import StatisticsTable from "./StatisticsTable";
+import ChartColumnSelectDialog from "../ChartColumnSelectDialog";
+import ExistingChartSelectDialog from "../ExistingChartSelectDialog";
+import ReactTooltip from "react-tooltip";
+import InfoIcon from "@material-ui/icons/Info";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -44,12 +49,21 @@ const StatsData = props => {
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
     null
   );
-  const { rawData, statsData, isTransforming } = useSelector(
-    state => state.present
-  );
+  const [chartSelectOpen, setChartSelectOpen] = useState(false);
+  const [showSelectChartOpen, setSelectShowChartOpen] = useState(false);
+  const [selectedChart, setSelectedChart] = useState("");
+  const {
+    rawData,
+    statsData,
+    isTransforming,
+    targetColumnName,
+    graphData
+  } = useSelector(state => state.present);
   const dispatch = useDispatch();
 
   const classes = useStyles();
+
+  const chartTypes = ["ScatterChart", "Histogram"];
 
   const handleTransformationSelect = transformerName => {
     const selectedTransformer = availableTransformers.find(
@@ -67,6 +81,15 @@ const StatsData = props => {
         )
       );
     }
+  };
+
+  const handleChartSelect = chartType => {
+    setSelectedChart(chartType);
+    setChartSelectOpen(true);
+  };
+
+  const showChartOpen = () => {
+    setSelectShowChartOpen(true);
   };
 
   // added async/await here for PolynomialFeaturesTransformer, since its performance was much better when async.
@@ -90,6 +113,7 @@ const StatsData = props => {
 
   const handleSelectionChange = selectedFeatureNames => {
     setSelectedFeatures(selectedFeatureNames);
+    setSelectedChart("");
   };
 
   const allTransformers = {
@@ -155,6 +179,14 @@ const StatsData = props => {
 
   const OptionComponent = optionComponentTransformer?.optionComponent;
 
+  const handleChartDialogClose = () => {
+    setChartSelectOpen(false);
+  };
+
+  const handleShowChartDialogClose = () => {
+    setSelectShowChartOpen(false);
+  };
+
   return (
     <div style={{ padding: 10 }}>
       {statsData !== undefined && (
@@ -214,6 +246,55 @@ const StatsData = props => {
                   </Grid>
                 </Fragment>
               )}
+              <Grid item style={{ marginLeft: "auto", marginTop: "18px" }}>
+                {graphData.length > 0 && (
+                  <Button onClick={showChartOpen} hidden={false} size="small">
+                    Show Previous Chart{graphData.length === 1 ? "" : "s"}
+                  </Button>
+                )}
+              </Grid>
+              <Grid item>
+                <div style={{ marginTop: "18px" }}>
+                  <InfoIcon data-tip data-for="chartTooltip" />
+                  <ReactTooltip id="chartTooltip" place="top" effect="solid">
+                    Select two columns for scatter chart, one column for
+                    histogram. If one column is selected for scatter chart, the
+                    target column ({targetColumnName}) will be used as the
+                    Y-axis automatically.
+                  </ReactTooltip>
+                </div>
+              </Grid>
+              <Grid item>
+                <FormControl
+                  className={classes.formControl}
+                  disabled={selectedFeatures.length === 0}
+                >
+                  <InputLabel>Create chart</InputLabel>
+                  <Select
+                    value={selectedChart}
+                    onChange={event => handleChartSelect(event.target.value)}
+                  >
+                    {chartTypes.map((chartType, idx) => (
+                      <MenuItem key={idx} value={chartType}>
+                        {chartType}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <ChartColumnSelectDialog
+                  open={chartSelectOpen}
+                  onClose={handleChartDialogClose}
+                  chartTypes={chartTypes}
+                  selectedChart={selectedChart}
+                  selectedFeatures={selectedFeatures}
+                  rawData={rawData}
+                ></ChartColumnSelectDialog>
+                <ExistingChartSelectDialog
+                  open={showSelectChartOpen}
+                  onClose={handleShowChartDialogClose}
+                  rawData={rawData}
+                />
+              </Grid>
               <Grid item style={{ marginLeft: "auto" }}>
                 <FormControl
                   className={classes.formControl}

@@ -4,6 +4,7 @@ import { castNumericColumns } from "../Utilities/ObjectUtilities";
 const Types = {
   CREATE_TABLE: "CREATE_TABLE",
   UPDATE_TABLE: "UPDATE_TABLE",
+  UPDATE_GRAPH_DATA: "UPDATE_GRAPH_DATA",
   SET_STATS_DATA: "SET_STATS_DATA",
   APPLY_TRANSFORMATION: "APPLY_TRANSFORMATION"
 };
@@ -42,9 +43,14 @@ const updateTable = updatedData => {
   };
 };
 
+const updateGraphData = (graphData) => {
+  return { type: Types.UPDATE_GRAPH_DATA, graphData };
+}
+
 export default {
   createTable,
   updateTable,
+  updateGraphData,
   applyTransformation,
   Types
 };
