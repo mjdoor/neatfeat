@@ -7,7 +7,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Button
+  Button,
+  CircularProgress,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,6 +25,9 @@ import OneHotEncodingTransformation from "../../Transformers/OneHotEncodingTrans
 import MathematicalCombinationOptions from "../Transformations/MathematicalCombinationOptions";
 import MathematicalCombinationTransformer from "../../Transformers/MathematicalCombinationTransformer";
 import DeleteColumns from "../../Transformers/DeleteColumns";
+import PolynomialFeaturesOptions from "../Transformations/PolynomialFeaturesOptions";
+import PolynomialFeaturesTransformer from "../../Transformers/PolynomialFeaturesTransformer";
+
 import StatisticsTable from "./StatisticsTable";
 import ChartColumnSelectDialog from "../ChartColumnSelectDialog";
 import ExistingChartSelectDialog from "../ExistingChartSelectDialog";
@@ -31,15 +35,14 @@ import ReactTooltip from "react-tooltip";
 import InfoIcon from "@material-ui/icons/Info";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 150
-  }
+    minWidth: 150,
+  },
 }));
-//TODO: get selected rows to delete from transformer
 
-const StatsData = props => {
+const StatsData = (props) => {
   const [showNumeric, setShowNumeric] = useState(true);
   const [selectedFeatures, setSelectedFeatures] = useState([]); // selectedFeatures can be used by the transformations so they know what columns to operate on
   const [optionComponentTransformer, setOptionComponentTransformer] = useState(
@@ -49,16 +52,16 @@ const StatsData = props => {
   const [showSelectChartOpen, setSelectShowChartOpen] = useState(false);
   const [selectedChart, setSelectedChart] = useState("");
   const [isChartCreated, setIsChartCreated] = useState(false);
-  const { rawData, statsData } = useSelector(state => state);
+  const { rawData, statsData, isTransforming } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   
   const chartTypes = ["BarChart", "ScatterChart", "Histogram"];
 
-  const handleTransformationSelect = transformerName => {
+  const handleTransformationSelect = (transformerName) => {
     const selectedTransformer = availableTransformers.find(
-      t => t.name === transformerName
+      (t) => t.name === transformerName
     );
 
     if (selectedTransformer.hasOwnProperty("optionComponent")) {
@@ -84,22 +87,26 @@ const StatsData = props => {
     setSelectShowChartOpen(true);
   }
 
-  const handleTransformWithOptions = options => {
+  // added async/await here for PolynomialFeaturesTransformer, since its performance was much better when async.
+  /// But this code still works for non-async transformers as well.
+  const handleTransformWithOptions = async (options) => {
+    dispatch(ACTIONS.applyTransformation(true));
     updateData(
-      optionComponentTransformer.transformFunction(
+      await optionComponentTransformer.transformFunction(
         rawData,
         selectedFeatures,
         options,
         statsData
       )
     );
+    dispatch(ACTIONS.applyTransformation(false));
   };
 
-  const updateData = transformedData => {
+  const updateData = (transformedData) => {
     dispatch(ACTIONS.updateTable(transformedData));
   };
 
-  const handleSelectionChange = selectedFeatureNames => {
+  const handleSelectionChange = (selectedFeatureNames) => {
     setSelectedFeatures(selectedFeatureNames);
   };
 
@@ -108,46 +115,60 @@ const StatsData = props => {
       {
         name: "Handle Missing Data",
         transformFunction: CategoricalMissingDataTransformer,
-        optionComponent: CategoricalMissingDataOptions
+        optionComponent: CategoricalMissingDataOptions,
       },
       {
         name: "One Hot Encoding",
-        transformFunction: OneHotEncodingTransformation
+        transformFunction: OneHotEncodingTransformation,
       },
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
+      {
+        name: "Delete Columns",
+        transformFunction: DeleteColumns,
+      },
+      {
+        name: "Delete Columns",
+        transformFunction: DeleteColumns,
+      },
     ],
     numerical: [
       {
         name: "Handle Missing Data",
         transformFunction: NumericalMissingDataTransformer,
-        optionComponent: NumericalMissingDataOptions
+        optionComponent: NumericalMissingDataOptions,
       },
       {
         name: "Scale",
-        transformFunction: ScalingTransformer
+        transformFunction: ScalingTransformer,
       },
       {
         name: "Normalize",
-        transformFunction: NormalizationTransformer
+        transformFunction: NormalizationTransformer,
       },
       {
         name: "Mathematically Combine",
         transformFunction: MathematicalCombinationTransformer,
-        optionComponent: props => (
+        optionComponent: (props) => (
           <MathematicalCombinationOptions
             selectedFeatures={selectedFeatures}
             {...props}
           />
-        )
+        ),
       },
-    {
-      name: "Delete Columns",
-      transformFunction: DeleteColumns
-    }
-    ]
+      {
+        name: "Add Polynomial Features",
+        transformFunction: PolynomialFeaturesTransformer,
+        optionComponent: (props) => (
+          <PolynomialFeaturesOptions
+            selectedFeatures={selectedFeatures}
+            {...props}
+          />
+        ),
+      },
+      {
+        name: "Delete Columns",
+        transformFunction: DeleteColumns,
+      },
+    ],
   };
 
   const availableTransformers = showNumeric
@@ -180,7 +201,7 @@ const StatsData = props => {
             <Grid item>
               <Switch
                 checked={showNumeric}
-                onChange={() => setShowNumeric(orig => !orig)}
+                onChange={() => setShowNumeric((orig) => !orig)}
                 name="datatypeSwitch"
               />
             </Grid>
@@ -233,7 +254,17 @@ const StatsData = props => {
               <ExistingChartSelectDialog open={showSelectChartOpen} onClose={handleShowChartDialogClose} rawData={rawData} />
 
             </Grid>
-            <Grid item >
+            {isTransforming && (
+              <Fragment>
+                <Grid item style={{ marginLeft: 100 }}>
+                  <CircularProgress />
+                </Grid>
+                <Grid item>
+                  <Typography>Applying transformation...</Typography>
+                </Grid>
+              </Fragment>
+            )}
+            <Grid item style={{ marginLeft: "auto" }}>
               <FormControl
                 className={classes.formControl}
                 disabled={selectedFeatures.length === 0}
@@ -241,7 +272,7 @@ const StatsData = props => {
                 <InputLabel>Transformations</InputLabel>
                 <Select
                   value={""}
-                  onChange={event =>
+                  onChange={(event) =>
                     handleTransformationSelect(event.target.value)
                   }
                 >

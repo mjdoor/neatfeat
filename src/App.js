@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Provider } from "react-redux";
@@ -10,7 +9,7 @@ import DataGridTable from "./components/DataGridTable";
 import StatsData from "./components/Statistics/StatsData";
 import DownloadCSV from "./components/DownloadCSV";
 
-import { store } from "./redux/store";
+import store from "./redux/store";
 
 function App() {
   return (

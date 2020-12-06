@@ -1,4 +1,12 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 import dataReducer from "./reducer";
+import { loadState, saveState } from "../localStorage/localStorage";
 
-export const store = createStore(dataReducer);
+// Load the state in localStorage
+const store = createStore(dataReducer, loadState(), applyMiddleware(thunk));
+
+// listen for store changes and use saveState to save them to localStorage
+store.subscribe(() => saveState(store.getState()));
+
+export default store;

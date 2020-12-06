@@ -1,29 +1,74 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { DataGrid } from "@material-ui/data-grid";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { roundNum } from "../Utilities/NumberUtilities";
+import ACTIONS from "../redux/actions";
+import { Grid } from "@material-ui/core";
+
+const useStyles = makeStyles(theme => ({
+  fadingOut: {
+    opacity: 0,
+    transition: "all 250ms linear"
+  }
+}));
+
+let fadingTimeout = null;
 
 const DataGridTable = () => {
-  const [rows, setRows] = React.useState([]);
-  const [columns, setColumns] = React.useState([]);
+  const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([]);
   const { rawData, columnNames } = useSelector(state => state);
-  const [deletedRows, setDeletedRows] = React.useState([]);
-  const [msg, setMsg] = React.useState("");
+  const [deletedRows, setDeletedRows] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [hideMsg, setHideMsg] = useState(false);
+  const dispatch = useDispatch();
+
+  const classes = useStyles();
 
   const handleRowSelection = e => {
-    console.log("row selected");
-    setDeletedRows([...deletedRows, ...rows.filter(r => r.id === e.data.id)]);
+    setMsg("");
+    setHideMsg(false);
+    if (e.isSelected === true) {
+      setDeletedRows(prevDeletedRows => [
+        ...prevDeletedRows,
+        rows.find(r => r.id === e.data.id)
+      ]);
+    } else if (e.isSelected === false) {
+      setDeletedRows(prevDeletedRows =>
+        prevDeletedRows.filter(r => r.id !== e.data.id)
+      );
+    }
   };
 
   const deleteRows = () => {
-    console.log("delete button");
-    console.log(deletedRows.length);
-    setMsg(deletedRows.length + " rows deleted.");
-    setRows(
-      rows.filter(r => deletedRows.filter(sr => sr.id === r.id).length < 1)
+    if (rawData[0].hasOwnProperty("id")) {
+      let dataFiltered = rawData;
+      deletedRows.forEach(selected => {
+        dataFiltered = dataFiltered.filter(r => r.id !== selected.id);
+      });
+      dispatch(ACTIONS.updateTable(dataFiltered));
+    } else {
+      setDeletedRows(deletedRows.sort((a, b) => b.id - a.id));
+      deletedRows.forEach(selected => {
+        rawData.splice(selected.id, 1);
+        dispatch(ACTIONS.updateTable(rawData));
+      });
+    }
+
+    setDeletedRows([]);
+
+    if (fadingTimeout !== null) {
+      clearTimeout(fadingTimeout);
+    }
+    setMsg(
+      `${deletedRows.length} row${deletedRows.length === 1 ? "" : "s"} deleted.`
     );
+    fadingTimeout = setTimeout(() => {
+      setHideMsg(true);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -46,7 +91,6 @@ const DataGridTable = () => {
         : rawData.map((row, idx) => {
             return { id: idx, ...row };
           });
-
       setColumns(columnOutputData);
       setRows(rawDataWithIds);
     }
@@ -56,15 +100,28 @@ const DataGridTable = () => {
     <div style={{ height: "400px", marginBottom: "100px", padding: 10 }}>
       {columns.length > 0 && (
         <div>
-          <IconButton
-            aria-label="delete"
-            color="secondary"
-            onClick={() => deleteRows()}
-          >
-            <DeleteIcon />
-          </IconButton>
-          <p style={{ fontWeight: "bolder" }}>{msg}</p>
-          <div />
+          <Grid component="div" container alignItems="flex-end">
+            <IconButton
+              aria-label="delete"
+              color="secondary"
+              onClick={() => deleteRows()}
+              disabled={deletedRows.length === 0}
+            >
+              <DeleteIcon />
+            </IconButton>
+            <p
+              style={{
+                fontWeight: "bolder",
+                display: "inline",
+                paddingLeft: 10,
+                paddingBottom: 13.5,
+                margin: 0
+              }}
+              className={hideMsg ? classes.fadingOut : ""}
+            >
+              {msg}
+            </p>
+          </Grid>
           <div style={{ marginTop: "30px", height: "400px" }}>
             <DataGrid
               columns={columns}
