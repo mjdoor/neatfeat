@@ -10,7 +10,9 @@ const MathematicalCombinationTransformer = (data, selectedColumns, options) => {
       featureName =>
         (expressionStringForRow = expressionStringForRow.replace(
           new RegExp(`\\|${featureName}\\|`, "g"), // feature names are wrapped in pipes from the option component to help differentiate from functions in case the have the same name
-          row[featureName] || nullIndicator
+          row[featureName] === null || row[featureName] === undefined
+            ? nullIndicator
+            : row[featureName]
         ))
     );
     let result = expressionStringForRow.includes(nullIndicator)

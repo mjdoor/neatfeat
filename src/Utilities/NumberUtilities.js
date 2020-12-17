@@ -4,6 +4,9 @@ export const roundNum = (num, places) => {
   if (isNaN(Number(num))) {
     return num;
   }
+  if (num >= -1e-4 && num <= 1e-4) {
+    return "0";
+  }
   if (!Number.isInteger(places)) {
     places = Math.round(places);
   }
