@@ -2,8 +2,6 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import dataReducer from "./reducer";
 
-import { loadState, saveState } from "../localStorage/localStorage";
-
 import undoable from "redux-undo";
 import ACTIONS from "./actions";
 
@@ -19,15 +17,10 @@ const groupRelatedActions = (action, currentState, previousHistory) => {
   }
 };
 
-const store = createStore(
+export default createStore(
   undoable(dataReducer, {
     filter: filterActions,
     groupBy: groupRelatedActions
   }),
-  loadState(),
   applyMiddleware(thunk)
 );
-
-store.subscribe(() => saveState(store.getState().present));
-
-export default store;
